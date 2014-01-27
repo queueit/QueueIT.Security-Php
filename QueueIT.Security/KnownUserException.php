@@ -5,10 +5,27 @@ require_once('DefaultKnownUserUrlProvider.php');
 
 class KnownUserException extends \Exception
 {
-	public function getOriginalUrl()
+	private $originalUrl;
+	private $validationUrl;
+	
+	public function setOriginalUrl($value)
 	{
-		$urlProvider = new DefaultKnownUserUrlProvider();
-		
-		return $urlProvider->getOriginalUrl();
+		$this->originalUrl = $value;
+	}
+
+	public function setValidationUrl($value)
+	{
+		$this->validationUrl = $value;
+	}
+	
+	public function getOriginalUrl()
+	{		
+		return $this->originalUrl;
+	}
+	
+	public function getValidationUrl()
+	{
+
+		return $this->validationUrl;
 	}
 }

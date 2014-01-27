@@ -7,7 +7,8 @@ require_once('KnownUserValidationException.php');
 require_once('ExpiredValidationException.php');
 require_once('InvalidKnownUserUrlException.php');
 require_once('InvalidKnownUserHashException.php');
-require_once('SessionValidateResultRepository.php');
+require_once('CookieValidateResultRepository.php');
+
 
 class SessionValidationController
 {
@@ -19,7 +20,7 @@ class SessionValidationController
 		global $resultProviderFactory, $defaultTicketExpiration;
 		
 		$defaultTicketExpiration = 180;
-		$resultProviderFactory = function () { return new SessionValidateResultRepository(); };
+		$resultProviderFactory = function () { return new CookieValidateResultRepository(); };
 		
 		if (!$loadConfiguration)
 			return;

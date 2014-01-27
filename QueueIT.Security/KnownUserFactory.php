@@ -5,6 +5,7 @@ require_once('InvalidKnownUserHashException.php');
 require_once('InvalidKnownUserUrlException.php');
 require_once('Md5KnownUser.php');
 require_once('RedirectType.php');
+require_once('Guid.php');
 
 use \InvalidArgumentException, \DateTime, \DateTimeZone;
 
@@ -58,6 +59,13 @@ class KnownUserFactory
 			$defaultQueryStringPrefix = $querystringPrefix;
 	}	
 		
+	public static function getSecretKey()
+	{
+		global $defaultSecretKey;
+		
+		return $defaultSecretKey;
+	}
+	
 	public static function verifyMd5Hash($secretKey = null, $urlProvider = null, $queryStringPrefix = null)
 	{
 		global $defaultQueryStringPrefix, $defaultSecretKey, $defaultUrlProviderFactory;
@@ -89,9 +97,9 @@ class KnownUserFactory
 					$urlProvider->getEventId($queryStringPrefix),
 					KnownUserFactory::decodeRedirectType($urlProvider->getRedirectType($queryStringPrefix)),
 					$urlProvider->getOriginalUrl($queryStringPrefix));
-		} catch (InvalidKnownUserUrlException $e) {
-			throw $e;
-		} catch (InvalidKnownUserHashException $e) {
+		} catch (KnownUserException $e) {
+			$e->setValidationUrl($urlProvider->getUrl());
+			$e->setOriginalUrl($urlProvider->getOriginalUrl($queryStringPrefix));
 			throw $e;
 		}
 	}
@@ -114,19 +122,32 @@ class KnownUserFactory
 		return RedirectType::FromString($redirectType);
 	}
 	
-	private static function decryptPlaceInQueue($encryptedPlaceInQueue)
-	// The users QueueNumber is his initial place in queue
-	// To decrypt the parsed “p” parameter from the query
-	// to the actual queue number the following function is used:
+	public static function decryptPlaceInQueue($encryptedPlaceInQueue)
 	{
 		if ($encryptedPlaceInQueue == null || strlen($encryptedPlaceInQueue) != 36)
 			throw new InvalidKnownUserUrlException();
 		
 		$e = $encryptedPlaceInQueue;
 		$p = substr($e,30,1).substr($e,3,1).substr($e,11,1).substr($e,20,1).substr($e,7,1).substr($e,26,1).substr($e,9,1); //uses one char of each string at a given starting point
-		return $p;
+		return (int)$p;
 	}
 	
+	public static function encryptPlaceInQueue($placeInQueue)
+	{
+		$encryptedPlaceInQueue = guid();
+		
+		$paddedPlaceInQueue = str_pad($placeInQueue, 7, "0", STR_PAD_LEFT);
+		
+		$encryptedPlaceInQueue[9] = $paddedPlaceInQueue[6];
+		$encryptedPlaceInQueue[26] = $paddedPlaceInQueue[5];
+		$encryptedPlaceInQueue[7] = $paddedPlaceInQueue[4];
+		$encryptedPlaceInQueue[20] = $paddedPlaceInQueue[3];
+		$encryptedPlaceInQueue[11] = $paddedPlaceInQueue[2];
+		$encryptedPlaceInQueue[3] = $paddedPlaceInQueue[1];
+		$encryptedPlaceInQueue[30] = $paddedPlaceInQueue[0];
+		
+		return $encryptedPlaceInQueue;
+	}
 	private static function verifyUrl($url, $sharedEventKey)
 	{
 		$expectedHash = substr($url, -32);
@@ -136,7 +157,7 @@ class KnownUserFactory
 		if (strcmp($actualhash, $expectedHash) != 0) {
 			throw new invalidKnownUserHashException('The hash of the request is invalid');
 		}
-	}
+	}	
 }
 
 KnownUserFactory::reset(true);

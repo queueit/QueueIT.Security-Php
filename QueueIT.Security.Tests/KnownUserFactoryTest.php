@@ -220,6 +220,48 @@ class KnownUserFactoryTest extends UnitTestCase {
 				$urlProvider,
 				$prefix);
 	}
+	
+	function test_verifyMd5Hash_KnownUserException() {
+	
+		//Arrange
+		$prefix = null;
+		$sharedKey = "zaqxswcdevfrbgtnhymjukiloZAQCDEFRBGTNHYMJUKILOPlkjhgfdsapoiuytrewqmnbvcx";
+	
+		$expectedPlaceInqueue = 7810;
+		$expectedQueueId = "fe070f51-5548-403c-9f0a-2626c15cb81b";
+		$placeInQueueEncrypted = "3d20e598-0304-474f-87e8-371a34073d3b";
+		$unixTimestamp = 1360241766;
+		$expectedTimeStamp = new DateTime("2013-02-07 12:56:06", new DateTimeZone("UTC"));
+		$expectedCustomerId = "somecust";
+		$expectedEventId = "someevent";
+		$expectedOriginalUrl = "http://www.example.com/test.aspx?prop=value";
+	
+		$urlNoHash = $expectedOriginalUrl . "?".$prefix."c=somecust&".$prefix."e=someevent&".$prefix."q=".$expectedQueueId."&".$prefix."p=".$placeInQueueEncrypted."&".$prefix."ts=".$unixTimestamp."&".$prefix."h=";
+	
+		$expectedHash = "INVALIDHASHxxxxxxxxxxxxxxxxxxxx";
+	
+		$url = $urlNoHash.$expectedHash;
+	
+		$urlProvider = new MockUrlProvider(
+				$url,
+				$expectedOriginalUrl,
+				$expectedQueueId,
+				$placeInQueueEncrypted,
+				(string)$unixTimestamp,
+				$expectedCustomerId,
+				$expectedEventId);
+	
+		//Act
+		try {
+			$knownUser = KnownUserFactory::verifyMd5Hash(
+					$sharedKey,
+					$urlProvider,
+					$prefix);
+		} catch (QueueIT\Security\KnownUserException $e) {
+			$this->assertEqual($url, $e->getValidationUrl());
+			$this->assertEqual($expectedOriginalUrl, $e->getOriginalUrl());
+		}		
+	}
 }
 
 class MockUrlProvider implements \QueueIT\Security\IKnownUserUrlProvider
