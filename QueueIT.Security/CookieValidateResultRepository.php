@@ -96,12 +96,12 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 			$redirectType = (string)$validationResult->getKnownUser()->getRedirectType();
 			$timeStamp = (string)$validationResult->getKnownUser()->getTimeStamp()->getTimestamp();
 			
-			setcookie($key . "[QueueId]", $queueId, null, null, $cookieDomain);
-			setcookie($key . "[OriginalUrl]", $originalUrl, null, null, $cookieDomain);
-			setcookie($key . "[PlaceInQueue]", KnownUserFactory::encryptPlaceInQueue($placeInQueue), null, null, $cookieDomain);
-			setcookie($key . "[RedirectType]", $redirectType, null, null, $cookieDomain);
-			setcookie($key . "[TimeStamp]", $timeStamp, null, null, $cookieDomain);
-			setcookie($key . "[Hash]", $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp), null, null, $cookieDomain);		
+			setcookie($key . "[QueueId]", $queueId, null, null, $cookieDomain, false, true);
+			setcookie($key . "[OriginalUrl]", $originalUrl, null, null, $cookieDomain, false, true);
+			setcookie($key . "[PlaceInQueue]", KnownUserFactory::encryptPlaceInQueue($placeInQueue), null, null, $cookieDomain, false, true);
+			setcookie($key . "[RedirectType]", $redirectType, null, null, $cookieDomain, false, true);
+			setcookie($key . "[TimeStamp]", $timeStamp, null, null, $cookieDomain, false, true);
+			setcookie($key . "[Hash]", $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp), null, null, $cookieDomain, false, true);		
 			
 		}
 	}
