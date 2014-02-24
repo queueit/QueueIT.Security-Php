@@ -23,7 +23,7 @@ class SessionValidateResultRepository extends ValidateResultRepositoryBase
 	
 	public function setValidationResult($queue, $validationResult)
 	{
-		if ($result instanceof AcceptedConfirmedResult)
+		if ($validationResult instanceof AcceptedConfirmedResult)
 		{
 			$key = $this->generateKey($queue->getCustomerId(), $queue->getEventId());
 			$_SESSION[$key] = $validationResult;
