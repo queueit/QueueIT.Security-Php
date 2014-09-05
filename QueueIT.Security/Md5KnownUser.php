@@ -10,6 +10,7 @@ class Md5KnownUser implements IKnownUser
 	private $eventId;
 	private $url;
 	private $originalUrl;
+	private $redirectType;
 	
 	public function getQueueId()
 	{

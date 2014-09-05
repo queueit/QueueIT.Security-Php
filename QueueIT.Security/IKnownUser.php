@@ -6,6 +6,7 @@ interface IKnownUser
 	public function getTimeStamp();
 	public function getCustomerId();
 	public function getEventId();
+	public function getRedirectType();
 	public function getOriginalUrl();
 }
 

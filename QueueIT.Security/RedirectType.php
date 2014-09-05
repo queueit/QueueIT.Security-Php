@@ -8,7 +8,8 @@ class RedirectType
 	const AfterEvent = 3;
 	const Disabled = 4;
 	const DirectLink = 5;
-  
+	const Idle = 5;
+	  
 	static function FromString($value)
 	{
 		if ($value == null)
@@ -22,6 +23,11 @@ class RedirectType
 		if (strtolower($value) == 'disabled')
 			return RedirectType::Disabled;
 		if (strtolower($value) == 'directlink')
-			return RedirectType::DirectLink;	}
+			return RedirectType::DirectLink;
+		if (strtolower($value) == 'idle')
+			return RedirectType::Idle;	
+		
+		return RedirectType::Unknown;
+	}
 }
 ?>
