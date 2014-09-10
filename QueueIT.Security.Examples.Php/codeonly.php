@@ -1,13 +1,13 @@
 <?php
 	require_once('../QueueIT.Security/SessionValidationController.php');
-		
+	require_once('CurrentBaseUrl.php');
+	
 	use QueueIT\Security\SessionValidationController, 
 		QueueIT\Security\KnownUserFactory,
 		QueueIT\Security\ExpiredValidationException, 
 		QueueIT\Security\KnownUserValidationException,
+		QueueIT\Security\AcceptedConfirmedResult,
 		QueueIT\Security\EnqueueResult;
-
-	session_start();
 
 	KnownUserFactory::configure('a774b1e2-8da7-4d51-b1a9-7647147bb13bace77210-a488-4b6f-afc9-8ba94551a7d7');
 	
@@ -20,6 +20,10 @@
 		{
 			header('Location: ' . $result->getRedirectUrl());
 		}
+		if ($result instanceof AcceptedConfirmedResult)
+		{
+			$cancelLink = $result->getQueue()->getCancelUrl(currentBaseUrl() . '/cancel.php?eventid=' . $result->getQueue()->getEventId());
+		}
 	}
 	catch (ExpiredValidationException $ex)
 	{
@@ -29,7 +33,7 @@
 	catch (KnownUserValidationException $ex)
 	{
 		// Known user is invalid - Show error page and use GetCancelUrl to get user back in the queue
-		header('Location: error.php?queuename=default&t=' + urlencode($ex->previous->getOriginalUrl()));
+		header('Location: error.php?queuename=default&t=' . urlencode($ex->getPrevious()->getOriginalUrl()));
 	}
 
   	//Buffer larger content areas like the main page content
@@ -48,7 +52,8 @@
             configures the queue with Customer ID and Event ID and thereby bypasses the 
             configuration section.</li>
     </ol>
-	
+	<div><a href="<?php echo $cancelLink; ?>">Cancel queue validation token</a></div>
+	<div><a href="expire.php?eventid=<?php echo $result->getQueue()->getEventId(); ?>">Change expiration</a></div>
 <?php
   //Assign all Page Specific variables
   $body = ob_get_contents();

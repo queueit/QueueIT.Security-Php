@@ -124,6 +124,20 @@ class SessionValidationController
 			throw new KnownUserValidationException($ex, $queue);
 		}		
 	}
+	
+	static function setExpiration($validationResult, $expirationTime)
+	{
+		global $resultProviderFactory;
+	
+		$sessionObject = $resultProviderFactory()->setValidationResult($validationResult->getQueue(), $validationResult, $expirationTime);
+	}
+	
+	static function cancel($validationResult)
+	{
+		global $resultProviderFactory;
+		
+		$sessionObject = $resultProviderFactory()->cancel($validationResult->getQueue(), $validationResult);
+	}
 }
 
 SessionValidationController::reset(true);

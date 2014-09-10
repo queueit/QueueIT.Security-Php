@@ -22,5 +22,15 @@ class AcceptedConfirmedResult extends ValidateResultBase
 		$this->knownUser = $knownUser;
 		$this->initialRequest = $initialRequest;
 	}
+	
+	function cancel() 
+	{
+		SessionValidationController::cancel($this);
+	}
+	
+	function setExpiration($expirationTime)
+	{
+		SessionValidationController::setExpiration($this, $expirationTime);
+	}
 }
 ?>

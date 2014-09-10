@@ -8,7 +8,7 @@ class RedirectType
 	const AfterEvent = 3;
 	const Disabled = 4;
 	const DirectLink = 5;
-	const Idle = 5;
+	const Idle = 6;
 	  
 	static function FromString($value)
 	{
