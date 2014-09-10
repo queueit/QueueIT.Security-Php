@@ -54,6 +54,7 @@ class SessionValidationController
 			$resultProviderFactory = $validationResultProviderFactory;
 	}
 	
+	// Never call request validation from error handling pages (e.g. error.php) which will cause users to get looped arround.
 	static function validateRequestFromConfiguration($queueName = 'default', $includeTargetUrl = null, $sslEnabled = null, $domainAlias = null, $language = null, $layoutName = null)
 	{
 		if ($queueName == null)
@@ -64,6 +65,7 @@ class SessionValidationController
 		return SessionValidationController::validateRequestFromQueue($queue, $includeTargetUrl, $sslEnabled, $domainAlias, $language, $layoutName);
 	}
 
+	// Never call request validation from error handling pages (e.g. error.php) which will cause users to get looped arround.
 	static function validateRequest($customerId, $eventId, $includeTargetUrl = null, $sslEnabled = null, $domainAlias = null, $language = null, $layoutName = null)
 	{
 		if ($customerId == null)

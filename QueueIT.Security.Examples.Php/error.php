@@ -1,5 +1,9 @@
 <?php
-	require_once('../QueueIT.Security/QueueFactory.php');
+	
+  // IMPORTANT !
+  // Never call request validation from error handling pages (e.g. error.php) which will cause users to get looped arround.
+  
+  require_once('../QueueIT.Security/QueueFactory.php');
 
 	use QueueIT\Security\QueueFactory;
   	
