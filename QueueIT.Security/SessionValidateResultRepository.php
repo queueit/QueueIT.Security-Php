@@ -12,10 +12,8 @@ class SessionValidateResultRepository extends ValidateResultRepositoryBase
 	static function reset($loadConfiguration = false)
 	{
 		global $idleExpiration;
-		global $disabledExpiration;
 	
 		$idleExpiration = 180;
-		$disabledExpiration = 180;
 	
 		if (!$loadConfiguration)
 			return;
@@ -37,21 +35,15 @@ class SessionValidateResultRepository extends ValidateResultRepositoryBase
 	
 		if (isset($settings['$idleExpiration']) && $settings['$idleExpiration'] != null)
 			$idleExpiration = (int)$settings['$idleExpiration'];
-		if (isset($settings['$disabledExpiration']) && $settings['$disabledExpiration'] != null)
-			$disabledExpiration = (int)$settings['$disabledExpiration'];
 	}
 	
 	public static function configure(
-			$idleExpirationValue = null,
-			$disabledExpirationValue = null)
+			$idleExpirationValue = null)
 	{
 		global $idleExpiration;
-		global $disabledExpiration;
 	
 		if ($idleExpirationValue != null)
 			$idleExpiration = $idleExpirationValue;
-		if ($disabledExpirationValue != null)
-			$disabledExpirationValue = $disabledExpirationValue;
 	}
 	
 	public function getValidationResult($queue)
@@ -84,14 +76,11 @@ class SessionValidateResultRepository extends ValidateResultRepositoryBase
 	public function setValidationResult($queue, $validationResult, $expirationTime = null)
 	{
 		global $idleExpiration;
-		global $disabledExpiration;
 		
 		if ($validationResult instanceof AcceptedConfirmedResult)
 		{
 			if ($expirationTime != null)
 				$expiration = $expirationTime;
-			elseif ($validationResult->getKnownUser()->getRedirectType() == RedirectType::Disabled)
-				$expiration = time() + disabledExpiration;
 			elseif ($validationResult->getKnownUser()->getRedirectType() == RedirectType::Idle)
 				$expiration = time() + idleExpiration;
 			else 

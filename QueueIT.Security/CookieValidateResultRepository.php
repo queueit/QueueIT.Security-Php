@@ -13,12 +13,10 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 		global $cookieDomain;
 		global $cookieExpiration;
 		global $idleExpiration;
-		global $disabledExpiration;
 		
 		$cookieDomain = null;
 		$cookieExpiration = 1200;
 		$idleExpiration = 180;
-		$disabledExpiration = 180;
 		
 		if (!$loadConfiguration)
 			return;
@@ -45,20 +43,16 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 			$cookieExpiration = (int)$settings['cookieExpiration'];
 		if (isset($settings['$idleExpiration']) && $settings['$idleExpiration'] != null)
 			$idleExpiration = (int)$settings['$idleExpiration'];
-		if (isset($settings['$disabledExpiration']) && $settings['$disabledExpiration'] != null)
-			$disabledExpiration = (int)$settings['$disabledExpiration'];
 	}
 	
 	public static function configure(
 			$cookieDomainValue = null,
 			$cookieExpirationValue = null,
-			$idleExpirationValue = null,
-			$disabledExpirationValue = null)
+			$idleExpirationValue = null)
 	{
 		global $cookieDomain;
 		global $cookieExpiration;
 		global $idleExpiration;
-		global $disabledExpiration;
 		
 		if ($cookieDomainValue != null)
 			$cookieDomain = $cookieDomainValue;
@@ -66,8 +60,6 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 			$cookieExpiration = $cookieExpirationValue;
 		if ($idleExpirationValue != null)
 			$idleExpiration = $idleExpirationValue;
-		if ($disabledExpirationValue != null)
-			$disabledExpirationValue = $disabledExpirationValue;
 	}
 		
 	public function getValidationResult($queue)
@@ -91,7 +83,7 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 				if ($actualHash != $expectedHash)
 					return null;
 			
-				if ($redirectType != RedirectType::Disabled && $redirectType != RedirectType::Idle)
+				if ($redirectType != RedirectType::Idle)
 					$this->writeCookie($queue, $queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $actualHash, null);
 
 				$parsedTimeStamp = new \DateTime("now", new \DateTimeZone("UTC"));
@@ -149,8 +141,6 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 		
 		if ($expirationTime != null)
 			$expires = $expirationTime;
-		elseif ($redirectType == RedirectType::Disabled)
-			$expires = time()+$disabledExpiration;
 		elseif ($redirectType == RedirectType::Idle)
 			$expires = time()+$idleExpiration;
 		else
