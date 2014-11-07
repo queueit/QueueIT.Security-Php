@@ -9,7 +9,7 @@
   	ob_start();
 ?>
 
-<a href="index.aspx">Back To Home</a> <a href="<?php echo $queue->getQueueUrl($_GET['t']); ?>">Go to queue</a>
+<a href="index.php">Back To Home</a> <a href="<?php echo $queue->getQueueUrl($_GET['t']); ?>">Go to queue</a>
 
 	
 <?php
