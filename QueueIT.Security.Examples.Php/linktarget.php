@@ -52,7 +52,7 @@
   //Assign all Page Specific variables
   $body = ob_get_contents();
   ob_end_clean();
-  $title = "Link";
+  $title = "Link Target";
   //Apply the template
   include("master.php");
 ?>

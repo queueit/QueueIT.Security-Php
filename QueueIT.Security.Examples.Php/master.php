@@ -9,7 +9,7 @@
         <meta name="viewport" content="width=device-width" />
         <link rel="stylesheet" href="/Content/Site.css" />
     </head>
-    <body>
+    <body id="<?php echo $title; ?>">
         <header>
             <div class="content-wrapper">
                 <div class="float-left">

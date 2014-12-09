@@ -37,7 +37,7 @@
   //Assign all Page Specific variables
   $body = ob_get_contents();
   ob_end_clean();
-  $title = "Link";
+  $title = "Link Queue Configuration";
   //Apply the template
   include("master.php");
 ?>

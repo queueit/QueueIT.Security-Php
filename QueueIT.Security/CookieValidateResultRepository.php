@@ -64,6 +64,8 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 		
 	public function getValidationResult($queue)
 	{
+		global $cookieExpiration;
+		
 		$key = $this->generateKey($queue->getCustomerId(), $queue->getEventId());
 		
 		if (isset($_COOKIE[$key])) {
@@ -77,14 +79,27 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 				$redirectType = $values["RedirectType"];
 				$timeStamp = $values["TimeStamp"];
 				$actualHash = $values["Hash"];
+				$expires = $values["Expires"];
+				
+				if (!is_numeric($expires))
+					return null;
+				
+				$expirationTime = intval($expires);
+				
+				if ($expirationTime < time())
+					return null;
 											
-				$expectedHash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp);
+				$expectedHash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $expirationTime);
 			
 				if ($actualHash != $expectedHash)
 					return null;
 			
 				if ($redirectType != RedirectType::Idle)
-					$this->writeCookie($queue, $queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $actualHash, null);
+				{
+					$newExpirationTime = time()+$cookieExpiration;
+					$newHash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $newExpirationTime);
+					$this->writeCookie($queue, $queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $newHash, $newExpirationTime);
+				}
 
 				$parsedTimeStamp = new \DateTime("now", new \DateTimeZone("UTC"));
 				$parsedTimeStamp->setTimestamp(intval($timeStamp));
@@ -114,6 +129,9 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 
 	public function setValidationResult($queue, $validationResult, $expirationTime = null)
 	{			
+		global $cookieExpiration;
+		global $idleExpiration;
+		
 		if ($validationResult instanceof AcceptedConfirmedResult)
 		{		
 			$queueId = (string)$validationResult->getKnownUser()->getQueueId();
@@ -121,7 +139,16 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 			$placeInQueue = (string)$validationResult->getKnownUser()->getPlaceInQueue();
 			$redirectType = (string)$validationResult->getKnownUser()->getRedirectType();
 			$timeStamp = (string)$validationResult->getKnownUser()->getTimeStamp()->getTimestamp();
-			$hash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp);
+			
+			if ($expirationTime == null)
+			{
+				if ($redirectType == RedirectType::Idle)
+					$expirationTime = time()+$idleExpiration;
+				else
+					$expirationTime = time()+$cookieExpiration;
+			}
+			
+			$hash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $expirationTime);
 			
 			$this->writeCookie($queue, $queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $hash, $expirationTime);
 		}
@@ -135,16 +162,8 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 	private function writeCookie($queue, $queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $hash, $expirationTime)
 	{
 		global $cookieDomain;
-		global $cookieExpiration;
-		global $idleExpiration;
-		global $disabledExpiration;
 		
-		if ($expirationTime != null)
-			$expires = $expirationTime;
-		elseif ($redirectType == RedirectType::Idle)
-			$expires = time()+$idleExpiration;
-		else
-			$expires = time()+$cookieExpiration;
+		$expires = $expirationTime;
 		
 		$key = $this->generateKey($queue->getCustomerId(), $queue->getEventId());
 		
@@ -154,14 +173,28 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 		setcookie($key . "[RedirectType]", $redirectType, $expires, null, $cookieDomain, false, true);
 		setcookie($key . "[TimeStamp]", $timeStamp, $expires, null, $cookieDomain, false, true);
 		setcookie($key . "[Hash]", $hash, $expires, null, $cookieDomain, false, true);		
+		setcookie($key . "[Expires]", $expirationTime, $expires, null, $cookieDomain, false, true);	
 	}
 	
-	private function generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timestamp)
+	private function generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timestamp, $expirationTime)
 	{
 		if ($placeInQueue == null)
 			$placeInQueue = 0;
-		return hash("sha256", $queueId . $originalUrl . $placeInQueue . $redirectType . $timestamp . KnownUserFactory::getSecretKey());
+		return hash("sha256", 
+				$queueId . 
+				$originalUrl . 
+				$placeInQueue . 
+				$redirectType . 
+				$timestamp . 
+				$expirationTime . 
+				KnownUserFactory::getSecretKey() .
+				$this->getFingerPrint());
 	}
+	
+	private function getFingerPrint() {
+		return $_SERVER['HTTP_USER_AGENT'] . $_SERVER['HTTP_ACCEPT'] . $_SERVER['HTTP_ACCEPT_ENCODING'] . $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+	}
+	
 }
 
 CookieValidateResultRepository::reset(true);

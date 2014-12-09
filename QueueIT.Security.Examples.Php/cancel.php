@@ -40,7 +40,7 @@
   //Assign all Page Specific variables
   $body = ob_get_contents();
   ob_end_clean();
-  $title = "Cancel";
+  $title = "Cancel Validation";
   //Apply the template
   include("master.php");
 ?>

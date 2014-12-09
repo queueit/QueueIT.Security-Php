@@ -75,7 +75,7 @@
   //Assign all Page Specific variables
   $body = ob_get_contents();
   ob_end_clean();
-  $title = "Advanced";
+  $title = "Advanced Queue Configuration";
   //Apply the template
   include("master.php");
 ?>

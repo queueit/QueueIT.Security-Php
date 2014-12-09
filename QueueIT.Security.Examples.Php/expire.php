@@ -41,7 +41,7 @@
   //Assign all Page Specific variables
   $body = ob_get_contents();
   ob_end_clean();
-  $title = "Set Expiration";
+  $title = "Expire Validation";
   //Apply the template
   include("master.php");
 ?>

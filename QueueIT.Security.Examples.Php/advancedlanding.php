@@ -16,7 +16,7 @@
   //Assign all Page Specific variables
   $body = ob_get_contents();
   ob_end_clean();
-  $title = "Advanced Landing Page";
+  $title = "Advanced Queue Landing Page";
   //Apply the template
   include("master.php");
 ?>
