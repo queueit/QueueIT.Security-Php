@@ -187,14 +187,8 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 				$redirectType . 
 				$timestamp . 
 				$expirationTime . 
-				KnownUserFactory::getSecretKey() .
-				$this->getFingerPrint());
+				KnownUserFactory::getSecretKey());
 	}
-	
-	private function getFingerPrint() {
-		return $_SERVER['HTTP_USER_AGENT'] . $_SERVER['HTTP_ACCEPT'] . $_SERVER['HTTP_ACCEPT_ENCODING'] . $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-	}
-	
 }
 
 CookieValidateResultRepository::reset(true);
