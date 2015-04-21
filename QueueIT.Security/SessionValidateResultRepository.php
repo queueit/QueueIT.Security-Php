@@ -53,7 +53,7 @@ class SessionValidateResultRepository extends ValidateResultRepositoryBase
 		if (!isset($_SESSION[$key]))
 			return null;
 		
-		$model = $_SESSION[$key];
+		$model = unserialize($_SESSION[$key]);
 		
 		if ($model->expiration != null && $model->expiration < time())
 			return null;
@@ -95,7 +95,7 @@ class SessionValidateResultRepository extends ValidateResultRepositoryBase
 			$model->expiration = $expiration;
 			
 			$key = $this->generateKey($queue->getCustomerId(), $queue->getEventId());
-			$_SESSION[$key] = $model;
+			$_SESSION[$key] = serialize($model);
 		}		
 	}
 	
