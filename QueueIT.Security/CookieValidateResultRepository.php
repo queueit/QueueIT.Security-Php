@@ -13,66 +13,75 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 		global $cookieDomain;
 		global $cookieExpiration;
 		global $idleExpiration;
-		
+		global $extendValidity;
+
 		$cookieDomain = null;
 		$cookieExpiration = 1200;
 		$idleExpiration = 180;
-		
+		$extendValidity = true;
+
 		if (!$loadConfiguration)
 			return;
-	
+
 		$iniFileName = $_SERVER['DOCUMENT_ROOT'] . "\queueit.ini";
-	
+
 		if (!file_exists($iniFileName))
 			return;
-	
+
 		$settings_array = parse_ini_file($iniFileName, true);
-	
+
 		if (!$settings_array)
 			return;
-	
+
 		$settings = $settings_array['settings'];
-	
+
 		if ($settings == null)
 			return;
-	
+
 		if (isset($settings['cookieDomain']) && $settings['cookieDomain'] != null)
 			$cookieDomain = $settings['cookieDomain'];
 
 		if (isset($settings['cookieExpiration']) && $settings['cookieExpiration'] != null)
 			$cookieExpiration = (int)$settings['cookieExpiration'];
-		if (isset($settings['$idleExpiration']) && $settings['$idleExpiration'] != null)
-			$idleExpiration = (int)$settings['$idleExpiration'];
+		if (isset($settings['idleExpiration']) && $settings['idleExpiration'] != null)
+			$idleExpiration = (int)$settings['idleExpiration'];
+		if (isset($settings['extendValidity']))
+		  $extendValidity = $settings['extendValidity'] == 1 ? true : false;
 	}
-	
+
 	public static function configure(
 			$cookieDomainValue = null,
 			$cookieExpirationValue = null,
-			$idleExpirationValue = null)
+			$idleExpirationValue = null,
+			$extendValidityValue = null)
 	{
 		global $cookieDomain;
 		global $cookieExpiration;
 		global $idleExpiration;
-		
+		global $extendValidity;
+
 		if ($cookieDomainValue != null)
 			$cookieDomain = $cookieDomainValue;
 		if ($cookieExpirationValue != null)
 			$cookieExpiration = $cookieExpirationValue;
 		if ($idleExpirationValue != null)
 			$idleExpiration = $idleExpirationValue;
+		if ($extendValidityValue != null)
+			$extendValidity = $extendValidityValue;
 	}
-		
+
 	public function getValidationResult($queue)
 	{
 		global $cookieExpiration;
-		
+		global $extendValidity;
+
 		$key = $this->generateKey($queue->getCustomerId(), $queue->getEventId());
-		
+
 		if (isset($_COOKIE[$key])) {
-			
+
 			try {
 				$values = $_COOKIE[$key];
-				
+
 				$queueId = $values["QueueId"];
 				$originalUrl = $values["OriginalUrl"];
 				$placeInQueue = KnownUserFactory::decryptPlaceInQueue($values["PlaceInQueue"]);
@@ -80,21 +89,21 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 				$timeStamp = $values["TimeStamp"];
 				$actualHash = $values["Hash"];
 				$expires = $values["Expires"];
-				
+
 				if (!is_numeric($expires))
 					return null;
-				
+
 				$expirationTime = intval($expires);
-				
+
 				if ($expirationTime < time())
 					return null;
-											
+
 				$expectedHash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $expirationTime);
-			
+
 				if ($actualHash != $expectedHash)
 					return null;
-			
-				if ($redirectType != RedirectType::Idle)
+
+				if ($extendValidity && $redirectType != RedirectType::Idle)
 				{
 					$newExpirationTime = time()+$cookieExpiration;
 					$newHash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $newExpirationTime);
@@ -103,24 +112,24 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 
 				$parsedTimeStamp = new \DateTime("now", new \DateTimeZone("UTC"));
 				$parsedTimeStamp->setTimestamp(intval($timeStamp));
-				
+
 				return new AcceptedConfirmedResult(
-						$queue, 
+						$queue,
 						new Md5KnownUser(
-								$queueId, 
-								$placeInQueue, 
-								$parsedTimeStamp, 
-								$queue->getCustomerId(), 
-								$queue->getEventId(), 
-								$redirectType, 
-								$originalUrl), 
+								$queueId,
+								$placeInQueue,
+								$parsedTimeStamp,
+								$queue->getCustomerId(),
+								$queue->getEventId(),
+								$redirectType,
+								$originalUrl),
 						false);
 			}
 			catch (InvalidKnownUserUrlException $e)
 			{
 				return null;
 			}
-			
+
 		}
 
 		return $result;
@@ -128,18 +137,18 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 	}
 
 	public function setValidationResult($queue, $validationResult, $expirationTime = null)
-	{			
+	{
 		global $cookieExpiration;
 		global $idleExpiration;
-		
+
 		if ($validationResult instanceof AcceptedConfirmedResult)
-		{		
+		{
 			$queueId = (string)$validationResult->getKnownUser()->getQueueId();
 			$originalUrl = $validationResult->getKnownUser()->getOriginalUrl();
 			$placeInQueue = (string)$validationResult->getKnownUser()->getPlaceInQueue();
 			$redirectType = (string)$validationResult->getKnownUser()->getRedirectType();
 			$timeStamp = (string)$validationResult->getKnownUser()->getTimeStamp()->getTimestamp();
-			
+
 			if ($expirationTime == null)
 			{
 				if ($redirectType == RedirectType::Idle)
@@ -147,46 +156,45 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 				else
 					$expirationTime = time()+$cookieExpiration;
 			}
-			
+
 			$hash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $expirationTime);
-			
 			$this->writeCookie($queue, $queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $hash, $expirationTime);
 		}
 	}
-	
+
 	public function cancel($queue, $validationResult)
-	{	
+	{
 		$this->setValidationResult($queue, $validationResult, time()-86400);
 	}
-	
+
 	private function writeCookie($queue, $queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $hash, $expirationTime)
 	{
 		global $cookieDomain;
-		
+
 		$expires = $expirationTime;
-		
+
 		$key = $this->generateKey($queue->getCustomerId(), $queue->getEventId());
-		
+
 		setcookie($key . "[QueueId]", $queueId, $expires, null, $cookieDomain, false, true);
 		setcookie($key . "[OriginalUrl]", $originalUrl, $expires, null, $cookieDomain, false, true);
 		setcookie($key . "[PlaceInQueue]", KnownUserFactory::encryptPlaceInQueue($placeInQueue), $expires, null, $cookieDomain, false, true);
 		setcookie($key . "[RedirectType]", $redirectType, $expires, null, $cookieDomain, false, true);
 		setcookie($key . "[TimeStamp]", $timeStamp, $expires, null, $cookieDomain, false, true);
-		setcookie($key . "[Hash]", $hash, $expires, null, $cookieDomain, false, true);		
-		setcookie($key . "[Expires]", $expirationTime, $expires, null, $cookieDomain, false, true);	
+		setcookie($key . "[Hash]", $hash, $expires, null, $cookieDomain, false, true);
+		setcookie($key . "[Expires]", $expirationTime, $expires, null, $cookieDomain, false, true);
 	}
-	
+
 	private function generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timestamp, $expirationTime)
 	{
 		if ($placeInQueue == null)
 			$placeInQueue = 0;
-		return hash("sha256", 
-				$queueId . 
-				$originalUrl . 
-				$placeInQueue . 
-				$redirectType . 
-				$timestamp . 
-				$expirationTime . 
+		return hash("sha256",
+				$queueId .
+				$originalUrl .
+				$placeInQueue .
+				$redirectType .
+				$timestamp .
+				$expirationTime .
 				KnownUserFactory::getSecretKey());
 	}
 }
