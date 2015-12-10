@@ -63,8 +63,8 @@ class QueueFactory
 	{
 		global $domain;
 
-		$customerId = strtolower($customerId);
-		$eventId = strtolower($eventId);
+		$customerId = trim(strtolower($customerId));
+		$eventId = trim(strtolower($eventId));
 
 		if ($domainAlias == null)
 			$domainAlias = $customerId . '.' . $domain;
