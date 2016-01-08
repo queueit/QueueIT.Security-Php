@@ -175,13 +175,13 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 
 		$key = $this->generateKey($queue->getCustomerId(), $queue->getEventId());
 
-		setcookie($key . "[QueueId]", $queueId, $expires, null, $cookieDomain, false, true);
-		setcookie($key . "[OriginalUrl]", $originalUrl, $expires, null, $cookieDomain, false, true);
-		setcookie($key . "[PlaceInQueue]", KnownUserFactory::encryptPlaceInQueue($placeInQueue), $expires, null, $cookieDomain, false, true);
-		setcookie($key . "[RedirectType]", $redirectType, $expires, null, $cookieDomain, false, true);
-		setcookie($key . "[TimeStamp]", $timeStamp, $expires, null, $cookieDomain, false, true);
-		setcookie($key . "[Hash]", $hash, $expires, null, $cookieDomain, false, true);
-		setcookie($key . "[Expires]", $expirationTime, $expires, null, $cookieDomain, false, true);
+		setcookie($key . "[QueueId]", $queueId, $expires, "/", $cookieDomain, false, true);
+		setcookie($key . "[OriginalUrl]", $originalUrl, $expires, "/", $cookieDomain, false, true);
+		setcookie($key . "[PlaceInQueue]", KnownUserFactory::encryptPlaceInQueue($placeInQueue), $expires, "/", $cookieDomain, false, true);
+		setcookie($key . "[RedirectType]", $redirectType, $expires, "/", $cookieDomain, false, true);
+		setcookie($key . "[TimeStamp]", $timeStamp, $expires, "/", $cookieDomain, false, true);
+		setcookie($key . "[Hash]", $hash, $expires, "/", $cookieDomain, false, true);
+		setcookie($key . "[Expires]", $expirationTime, $expires, "/", $cookieDomain, false, true);
 	}
 
 	private function generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timestamp, $expirationTime)
