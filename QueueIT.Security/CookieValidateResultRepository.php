@@ -77,63 +77,59 @@ class CookieValidateResultRepository extends ValidateResultRepositoryBase
 
 		$key = $this->generateKey($queue->getCustomerId(), $queue->getEventId());
 
-		if (isset($_COOKIE[$key])) {
+		if (!isset($_COOKIE[$key]))
+			return null;
+			
+		try {
+			$values = $_COOKIE[$key];
 
-			try {
-				$values = $_COOKIE[$key];
+			$queueId = $values["QueueId"];
+			$originalUrl = $values["OriginalUrl"];
+			$placeInQueue = KnownUserFactory::decryptPlaceInQueue($values["PlaceInQueue"]);
+			$redirectType = $values["RedirectType"];
+			$timeStamp = $values["TimeStamp"];
+			$actualHash = $values["Hash"];
+			$expires = $values["Expires"];
 
-				$queueId = $values["QueueId"];
-				$originalUrl = $values["OriginalUrl"];
-				$placeInQueue = KnownUserFactory::decryptPlaceInQueue($values["PlaceInQueue"]);
-				$redirectType = $values["RedirectType"];
-				$timeStamp = $values["TimeStamp"];
-				$actualHash = $values["Hash"];
-				$expires = $values["Expires"];
-
-				if (!is_numeric($expires))
-					return null;
-
-				$expirationTime = intval($expires);
-
-				if ($expirationTime < time())
-					return null;
-
-				$expectedHash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $expirationTime);
-
-				if ($actualHash != $expectedHash)
-					return null;
-
-				if ($extendValidity && $redirectType != RedirectType::Idle)
-				{
-					$newExpirationTime = time()+$cookieExpiration;
-					$newHash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $newExpirationTime);
-					$this->writeCookie($queue, $queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $newHash, $newExpirationTime);
-				}
-
-				$parsedTimeStamp = new \DateTime("now", new \DateTimeZone("UTC"));
-				$parsedTimeStamp->setTimestamp(intval($timeStamp));
-
-				return new AcceptedConfirmedResult(
-						$queue,
-						new Md5KnownUser(
-								$queueId,
-								$placeInQueue,
-								$parsedTimeStamp,
-								$queue->getCustomerId(),
-								$queue->getEventId(),
-								$redirectType,
-								$originalUrl),
-						false);
-			}
-			catch (InvalidKnownUserUrlException $e)
-			{
+			if (!is_numeric($expires))
 				return null;
+
+			$expirationTime = intval($expires);
+
+			if ($expirationTime < time())
+				return null;
+
+			$expectedHash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $expirationTime);
+
+			if ($actualHash != $expectedHash)
+				return null;
+
+			if ($extendValidity && $redirectType != RedirectType::Idle)
+			{
+				$newExpirationTime = time()+$cookieExpiration;
+				$newHash = $this->generateHash($queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $newExpirationTime);
+				$this->writeCookie($queue, $queueId, $originalUrl, $placeInQueue, $redirectType, $timeStamp, $newHash, $newExpirationTime);
 			}
 
+			$parsedTimeStamp = new \DateTime("now", new \DateTimeZone("UTC"));
+			$parsedTimeStamp->setTimestamp(intval($timeStamp));
+
+			return new AcceptedConfirmedResult(
+				$queue,
+				new Md5KnownUser(
+					$queueId,
+					$placeInQueue,
+					$parsedTimeStamp,
+					$queue->getCustomerId(),
+					$queue->getEventId(),
+					$redirectType,
+					$originalUrl),
+				false);
 		}
-
-		return $result;
-
+		catch (InvalidKnownUserUrlException $e)
+		{
+			return null;
+		}
 	}
 
 	public function setValidationResult($queue, $validationResult, $expirationTime = null)
