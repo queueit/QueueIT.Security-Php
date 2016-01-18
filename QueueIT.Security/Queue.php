@@ -112,7 +112,7 @@ class Queue implements IQueue
 			$targetUrl = $this->defaultIncludeTargetUrl;
 
 		if (is_bool($targetUrl) && $targetUrl == true)
-			$targetUrl = currentUrl();
+			$targetUrl = KnownUserFactory::getKnownUserUrlProvider()->getUrl();
 
 		if (is_bool($targetUrl) && $targetUrl == false)
 			return $queueUrl;

@@ -66,6 +66,13 @@ class KnownUserFactory
 		return $defaultSecretKey;
 	}
 	
+	public static function getKnownUserUrlProvider()
+	{
+		global $defaultUrlProviderFactory;
+		
+		return $defaultUrlProviderFactory();
+	}
+	
 	public static function verifyMd5Hash($secretKey = null, $urlProvider = null, $queryStringPrefix = null)
 	{
 		global $defaultQueryStringPrefix, $defaultSecretKey, $defaultUrlProviderFactory;
