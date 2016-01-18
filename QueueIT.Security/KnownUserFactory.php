@@ -152,11 +152,14 @@ class KnownUserFactory
 	{
 		$expectedHash = substr($url, -32);
 		$urlNoHash=substr($url, 0, -32) . $sharedEventKey; //Remove hash value and add SharedEventKey
-		$actualhash = md5(utf8_encode($urlNoHash));
+		$actualhashHttp = md5(utf8_encode(preg_replace("/^https:\/\/(.*)$/", 'http://$1', $urlNoHash)));
+		$actualhashHttps = md5(utf8_encode(preg_replace("/^http:\/\/(.*)$/", 'https://$1', $urlNoHash)));
 
-		if (strcmp($actualhash, $expectedHash) != 0) {
-			throw new invalidKnownUserHashException('The hash of the request is invalid');
+		if (strcmp($actualhashHttp, $expectedHash) == 0 || strcmp($actualhashHttps, $expectedHash) == 0 ) {
+			return;
 		}
+		
+		throw new invalidKnownUserHashException('The hash of the request is invalid');
 	}	
 }
 
