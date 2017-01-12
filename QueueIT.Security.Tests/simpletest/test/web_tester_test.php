@@ -148,7 +148,7 @@ class TestOfTextExpectations extends UnitTestCase {
 
 class TestOfGenericAssertionsInWebTester extends WebTestCase {
     function testEquality() {
-        $this->assertEqual('a', 'a');
+        $this->assertEquals('a', 'a');
         $this->assertNotEqual('a', 'A');
     }
 }

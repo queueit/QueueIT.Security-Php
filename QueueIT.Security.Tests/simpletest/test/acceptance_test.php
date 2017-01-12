@@ -23,9 +23,9 @@ class TestOfLiveBrowser extends UnitTestCase {
         $this->assertTrue($browser->get($this->samples() . 'network_confirm.php'));
         $this->assertPattern('/target for the SimpleTest/', $browser->getContent());
         $this->assertPattern('/Request method.*?<dd>GET<\/dd>/', $browser->getContent());
-        $this->assertEqual($browser->getTitle(), 'Simple test target file');
-        $this->assertEqual($browser->getResponseCode(), 200);
-        $this->assertEqual($browser->getMimeType(), 'text/html');
+        $this->assertEquals('Simple test target file', $browser->getTitle());
+        $this->assertEquals(200, $browser->getResponseCode());
+        $this->assertEquals('text/html', $browser->getMimeType());
     }
 
     function testPost() {
@@ -81,9 +81,9 @@ class TestOfLiveBrowser extends UnitTestCase {
         $browser = new SimpleBrowser();
         $browser->addHeader('User-Agent: SimpleTest ' . SimpleTest::getVersion());
         $browser->get($this->samples() . 'set_cookies.php');
-        $this->assertEqual($browser->getCurrentCookieValue('session_cookie'), 'A');
-        $this->assertEqual($browser->getCurrentCookieValue('short_cookie'), 'B');
-        $this->assertEqual($browser->getCurrentCookieValue('day_cookie'), 'C');
+        $this->assertEquals('A', $browser->getCurrentCookieValue('session_cookie'));
+        $this->assertEquals('B', $browser->getCurrentCookieValue('short_cookie'));
+        $this->assertEquals('C', $browser->getCurrentCookieValue('day_cookie'));
     }
 
     function testSimpleSubmit() {
@@ -114,9 +114,9 @@ class TestOfLocalFileBrowser extends UnitTestCase {
         $browser->addHeader('User-Agent: SimpleTest ' . SimpleTest::getVersion());
         $this->assertTrue($browser->get($this->samples() . 'file.html'));
         $this->assertPattern('/Link to SimpleTest/', $browser->getContent());
-        $this->assertEqual($browser->getTitle(), 'Link to SimpleTest');
+        $this->assertEquals('Link to SimpleTest', $browser->getTitle());
         $this->assertFalse($browser->getResponseCode());
-        $this->assertEqual($browser->getMimeType(), '');
+        $this->assertEquals('', $browser->getMimeType());
     }
 }
 
@@ -128,47 +128,47 @@ class TestOfRequestMethods extends UnitTestCase {
 	function testHeadRequest() {
 		$browser = new SimpleBrowser();
 		$this->assertTrue($browser->head($this->samples() . 'request_methods.php'));
-		$this->assertEqual($browser->getResponseCode(), 202);
+		$this->assertEquals(202, $browser->getResponseCode());
 	}
 
 	function testGetRequest() {
 		$browser = new SimpleBrowser();
 		$this->assertTrue($browser->get($this->samples() . 'request_methods.php'));
-		$this->assertEqual($browser->getResponseCode(), 405);
+		$this->assertEquals(405, $browser->getResponseCode());
 	}
 
 	function testPostWithPlainEncoding() {
 		$browser = new SimpleBrowser();
 		$this->assertTrue($browser->post($this->samples() . 'request_methods.php', 'A content message'));
-		$this->assertEqual($browser->getResponseCode(), 406);
+		$this->assertEquals(406, $browser->getResponseCode());
 		$this->assertPattern('/Please ensure content type is an XML format/', $browser->getContent());
 	}
 
 	function testPostWithXmlEncoding() {
 		$browser = new SimpleBrowser();
 		$this->assertTrue($browser->post($this->samples() . 'request_methods.php', '<a><b>c</b></a>', 'text/xml'));
-		$this->assertEqual($browser->getResponseCode(), 201);
+		$this->assertEquals(201, $browser->getResponseCode());
 		$this->assertPattern('/c/', $browser->getContent());
 	}
 
 	function testPutWithPlainEncoding() {
 		$browser = new SimpleBrowser();
 		$this->assertTrue($browser->put($this->samples() . 'request_methods.php', 'A content message'));
-		$this->assertEqual($browser->getResponseCode(), 406);
+		$this->assertEquals(406, $browser->getResponseCode());
 		$this->assertPattern('/Please ensure content type is an XML format/', $browser->getContent());
 	}
 
 	function testPutWithXmlEncoding() {
 		$browser = new SimpleBrowser();
 		$this->assertTrue($browser->put($this->samples() . 'request_methods.php', '<a><b>c</b></a>', 'application/xml'));
-		$this->assertEqual($browser->getResponseCode(), 201);
+		$this->assertEquals(201, $browser->getResponseCode());
 		$this->assertPattern('/c/', $browser->getContent());
 	}
 
 	function testDeleteRequest() {
 		$browser = new SimpleBrowser();
 		$browser->delete($this->samples() . 'request_methods.php');
-		$this->assertEqual($browser->getResponseCode(), 202);
+		$this->assertEquals(202, $browser->getResponseCode());
 		$this->assertPattern('/Your delete request was accepted/', $browser->getContent());
 	}
 
@@ -179,14 +179,14 @@ class TestRadioFields extends SimpleTestAcceptanceTest {
         $this->get($this->samples() . 'form_with_radio_buttons.html');
         $this->assertTrue($this->setField('tested_field', 2));
         $this->clickSubmitByName('send');
-        $this->assertEqual($this->getUrl(), $this->samples() . 'form_with_radio_buttons.html?tested_field=2&send=click+me');
+        $this->assertEquals($this->samples() . 'form_with_radio_buttons.html?tested_field=2&send=click+me', $this->getUrl());
     }
 
     function testSetFieldAsString() {
         $this->get($this->samples() . 'form_with_radio_buttons.html');
         $this->assertTrue($this->setField('tested_field', '2'));
         $this->clickSubmitByName('send');
-        $this->assertEqual($this->getUrl(), $this->samples() . 'form_with_radio_buttons.html?tested_field=2&send=click+me');
+        $this->assertEquals($this->samples() . 'form_with_radio_buttons.html?tested_field=2&send=click+me', $this->getUrl());
     }
 }
 
@@ -213,7 +213,7 @@ class TestOfLiveFetching extends SimpleTestAcceptanceTest {
 
     function testGet() {
         $this->assertTrue($this->get($this->samples() . 'network_confirm.php'));
-        $this->assertEqual($this->getUrl(), $this->samples() . 'network_confirm.php');
+        $this->assertEquals($this->samples() . 'network_confirm.php', $this->getUrl());
         $this->assertText('target for the SimpleTest');
         $this->assertPattern('/Request method.*?<dd>GET<\/dd>/');
         $this->assertTitle('Simple test target file');
@@ -338,7 +338,7 @@ class TestOfLivePageLinkingWithMinimalLinks extends SimpleTestAcceptanceTest {
 
     function testClickToExplicitelyNamedSelfReturns() {
         $this->get($this->samples() . 'front_controller_style/a_page.php');
-        $this->assertEqual($this->getUrl(), $this->samples() . 'front_controller_style/a_page.php');
+        $this->assertEquals($this->samples() . 'front_controller_style/a_page.php', $this->getUrl());
         $this->assertTitle('Simple test page with links');
         $this->assertLink('Self');
         $this->clickLink('Self');

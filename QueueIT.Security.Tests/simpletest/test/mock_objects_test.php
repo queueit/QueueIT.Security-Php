@@ -119,13 +119,13 @@ class TestOfSimpleSignatureMap extends UnitTestCase {
         $map->add(array(2), new SimpleByValue("2"));
         $map->add("", new SimpleByValue("Default"));
         $map->add(array(), new SimpleByValue("None"));
-        $this->assertEqual($map->findFirstAction(array(1, 2)), new SimpleByValue("1, 2"));
-        $this->assertEqual($map->findFirstAction(array(1, 3)), new SimpleByValue("1, 3"));
-        $this->assertEqual($map->findFirstAction(array(1, 4)), new SimpleByValue("1, 4"));
-        $this->assertEqual($map->findFirstAction(array(1)), new SimpleByValue("1"));
-        $this->assertEqual($map->findFirstAction(array(2)), new SimpleByValue("Any"));
-        $this->assertEqual($map->findFirstAction(array(3)), new SimpleByValue("Any"));
-        $this->assertEqual($map->findFirstAction(array()), new SimpleByValue("Default"));
+        $this->assertEquals(2)), new SimpleByValue("1, 2"), $map->findFirstAction(array(1);
+        $this->assertEquals(3)), new SimpleByValue("1, 3"), $map->findFirstAction(array(1);
+        $this->assertEquals(4)), new SimpleByValue("1, 4"), $map->findFirstAction(array(1);
+        $this->assertEquals(new SimpleByValue("1"), $map->findFirstAction(array(1)));
+        $this->assertEquals(new SimpleByValue("Any"), $map->findFirstAction(array(2)));
+        $this->assertEquals(new SimpleByValue("Any"), $map->findFirstAction(array(3)));
+        $this->assertEquals(new SimpleByValue("Default"), $map->findFirstAction(array()));
     }
 }
 
@@ -324,9 +324,9 @@ class TestOfMockReturns extends UnitTestCase {
         $mock->returnsAt(2, "aMethod", "value", array('*', 3));
         $mock->returns("aMethod", 3, array(3));
         $this->assertNull($mock->aMethod());
-        $this->assertEqual($mock->aMethod("a"), "aaa");
+        $this->assertEquals("aaa", $mock->aMethod("a"));
         $this->assertSame($mock->aMethod(1, 2), $object);
-        $this->assertEqual($mock->aMethod(3), 3);
+        $this->assertEquals(3, $mock->aMethod(3));
         $this->assertNull($mock->aMethod());
     }
 
@@ -679,8 +679,8 @@ class TestOfSpecialMethods extends UnitTestCase {
         $mock = new MockClassWithSpecialMethods();
         $mock->returnsByValue('__get', '1st Return', array('first'));
         $mock->returnsByValue('__get', '2nd Return', array('second'));
-        $this->assertEqual($mock->first, '1st Return');
-        $this->assertEqual($mock->second, '2nd Return');
+        $this->assertEquals('1st Return', $mock->first);
+        $this->assertEquals('2nd Return', $mock->second);
     }
 
     function testcanExpectTheSettingOfValue() {
@@ -704,7 +704,7 @@ class TestOfSpecialMethods extends UnitTestCase {
         print $mock;
         $output = ob_get_contents();
         ob_end_clean();
-        $this->assertEqual($output, 'AAA');
+        $this->assertEquals('AAA', $output);
     }
 }
 
@@ -794,7 +794,7 @@ class TestOfPartialMocks extends UnitTestCase {
 
     function testMethodReplacementWithNoBehaviourReturnsNull() {
         $mock = new TestDummy();
-        $this->assertEqual($mock->aMethod(99), 99);
+        $this->assertEquals(99, $mock->aMethod(99));
         $this->assertNull($mock->anotherMethod());
     }
 
@@ -803,9 +803,9 @@ class TestOfPartialMocks extends UnitTestCase {
         $mock->returnsByValue('anotherMethod', 33, array(3));
         $mock->returnsByValue('anotherMethod', 22);
         $mock->returnsByValueAt(2, 'anotherMethod', 44, array(3));
-        $this->assertEqual($mock->anotherMethod(), 22);
-        $this->assertEqual($mock->anotherMethod(3), 33);
-        $this->assertEqual($mock->anotherMethod(3), 44);
+        $this->assertEquals(22, $mock->anotherMethod());
+        $this->assertEquals(33, $mock->anotherMethod(3));
+        $this->assertEquals(44, $mock->anotherMethod(3));
     }
 
     function testSetReturnReferenceGivesOriginal() {

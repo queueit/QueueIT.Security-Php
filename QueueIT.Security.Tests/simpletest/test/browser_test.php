@@ -167,7 +167,7 @@ class TestOfParsedPageAccess extends UnitTestCase {
         $browser = new MockParseSimpleBrowser($this);
         $browser->returns('createUserAgent', $agent);
         $browser->__construct();
-        $this->assertEqual($browser->getContent(), '');
+        $this->assertEquals('', $browser->getContent());
     }
 
     function testParse() {
@@ -183,15 +183,15 @@ class TestOfParsedPageAccess extends UnitTestCase {
         $page->setReturnValue('getTransportError', 'Ouch!');
 
         $browser = $this->loadPage($page);
-        $this->assertEqual($browser->getRequest(), "GET here.html\r\n\r\n");
-        $this->assertEqual($browser->getContent(), 'Raw HTML');
-        $this->assertEqual($browser->getTitle(), 'Here');
-        $this->assertEqual($browser->getFrameFocus(), 'Frame');
+        $this->assertEquals("GET here.html\r\n\r\n", $browser->getRequest());
+        $this->assertEquals('Raw HTML', $browser->getContent());
+        $this->assertEquals('Here', $browser->getTitle());
+        $this->assertEquals('Frame', $browser->getFrameFocus());
         $this->assertIdentical($browser->getResponseCode(), 200);
-        $this->assertEqual($browser->getMimeType(), 'text/html');
-        $this->assertEqual($browser->getAuthentication(), 'Basic');
-        $this->assertEqual($browser->getRealm(), 'Somewhere');
-        $this->assertEqual($browser->getTransportError(), 'Ouch!');
+        $this->assertEquals('text/html', $browser->getMimeType());
+        $this->assertEquals('Basic', $browser->getAuthentication());
+        $this->assertEquals('Somewhere', $browser->getRealm());
+        $this->assertEquals('Ouch!', $browser->getTransportError());
     }
 
     function testLinkAffirmationWhenPresent() {
@@ -216,7 +216,7 @@ class TestOfParsedPageAccess extends UnitTestCase {
         $page->expectOnce('setField', array(new SimpleByLabelOrName('key'), 'Value', false));
         $page->setReturnValue('getField', 'Value');
         $browser = $this->loadPage($page);
-        $this->assertEqual($browser->getField('key'), 'Value');
+        $this->assertEquals('Value', $browser->getField('key'));
         $browser->setField('key', 'Value');
     }
 }
@@ -586,7 +586,7 @@ class TestOfBrowserFrames extends UnitTestCase {
         $browser = $this->createBrowser($this->createUserAgent(array(
                 'http://site.with.one.frame/' => $frameset,
                 'http://site.with.one.frame/frame.html' => 'A frame')));
-        $this->assertEqual($browser->get('http://site.with.one.frame/'), 'A frame');
+        $this->assertEquals('A frame', $browser->get('http://site.with.one.frame/'));
         $this->assertIdentical(
                 $browser->getFrames(),
                 array('a' => 'http://site.with.one.frame/frame.html'));
@@ -599,7 +599,7 @@ class TestOfBrowserFrames extends UnitTestCase {
                 'http://site.with.one.frame/' => $frameset,
                 'http://site.with.one.frame/frame.html' => '<title>Page title</title>')));
         $browser->get('http://site.with.one.frame/');
-        $this->assertEqual($browser->getTitle(), 'Frameset title');
+        $this->assertEquals('Frameset title', $browser->getTitle());
     }
 
     function testFramesetWithSingleUnnamedFrame() {
@@ -648,11 +648,11 @@ class TestOfBrowserFrames extends UnitTestCase {
                 'http://site.with.frames/frame_c.html' => 'C frame')));
         $browser->get('http://site.with.frames/');
         $browser->setFrameFocus('a');
-        $this->assertEqual($browser->getContent(), 'A frame');
+        $this->assertEquals('A frame', $browser->getContent());
         $browser->setFrameFocus('b');
-        $this->assertEqual($browser->getContent(), 'B frame');
+        $this->assertEquals('B frame', $browser->getContent());
         $browser->setFrameFocus('c');
-        $this->assertEqual($browser->getContent(), 'C frame');
+        $this->assertEquals('C frame', $browser->getContent());
     }
 
     function testFramesetWithSomeNamedFrames() {
@@ -693,15 +693,15 @@ class TestOfBrowserFrames extends UnitTestCase {
                 'http://site.with.frames/frame_d.html' => 'D frame')));
         $browser->get('http://site.with.frames/');
         $browser->setFrameFocus('a');
-        $this->assertEqual($browser->getContent(), 'A frame');
+        $this->assertEquals('A frame', $browser->getContent());
         $browser->setFrameFocus(2);
-        $this->assertEqual($browser->getContent(), 'B frame');
+        $this->assertEquals('B frame', $browser->getContent());
         $browser->setFrameFocus('c');
-        $this->assertEqual($browser->getContent(), 'C frame');
+        $this->assertEquals('C frame', $browser->getContent());
         $browser->setFrameFocus(4);
-        $this->assertEqual($browser->getContent(), 'D frame');
+        $this->assertEquals('D frame', $browser->getContent());
         $browser->clearFrameFocus();
-        $this->assertEqual($browser->getContent(), 'A frameB frameC frameD frame');
+        $this->assertEquals('A frameB frameC frameD frame', $browser->getContent());
     }
 
     function testNestedFrameset() {
@@ -740,25 +740,25 @@ class TestOfBrowserFrames extends UnitTestCase {
                 'http://site.with.nested.frames/three.html' => 'Page three')));
 
         $browser->get('http://site.with.nested.frames/');
-        $this->assertEqual($browser->getContent(), 'Page onePage twoPage three');
+        $this->assertEquals('Page onePage twoPage three', $browser->getContent());
 
         $this->assertTrue($browser->setFrameFocus('inner'));
-        $this->assertEqual($browser->getFrameFocus(), array('inner'));
+        $this->assertEquals(array('inner'), $browser->getFrameFocus());
         $this->assertTrue($browser->setFrameFocus('one'));
-        $this->assertEqual($browser->getFrameFocus(), array('inner', 'one'));
-        $this->assertEqual($browser->getContent(), 'Page one');
+        $this->assertEquals(array('inner', 'one'), $browser->getFrameFocus());
+        $this->assertEquals('Page one', $browser->getContent());
 
         $this->assertTrue($browser->setFrameFocus('two'));
-        $this->assertEqual($browser->getFrameFocus(), array('inner', 'two'));
-        $this->assertEqual($browser->getContent(), 'Page two');
+        $this->assertEquals(array('inner', 'two'), $browser->getFrameFocus());
+        $this->assertEquals('Page two', $browser->getContent());
 
         $browser->clearFrameFocus();
         $this->assertTrue($browser->setFrameFocus('three'));
-        $this->assertEqual($browser->getFrameFocus(), array('three'));
-        $this->assertEqual($browser->getContent(), 'Page three');
+        $this->assertEquals(array('three'), $browser->getFrameFocus());
+        $this->assertEquals('Page three', $browser->getContent());
 
         $this->assertTrue($browser->setFrameFocus('inner'));
-        $this->assertEqual($browser->getContent(), 'Page onePage two');
+        $this->assertEquals('Page onePage two', $browser->getContent());
     }
 
     function testCanNavigateToNestedFrameByIndex() {
@@ -778,25 +778,25 @@ class TestOfBrowserFrames extends UnitTestCase {
                 'http://site.with.nested.frames/three.html' => 'Page three')));
 
         $browser->get('http://site.with.nested.frames/');
-        $this->assertEqual($browser->getContent(), 'Page onePage twoPage three');
+        $this->assertEquals('Page onePage twoPage three', $browser->getContent());
 
         $this->assertTrue($browser->setFrameFocusByIndex(1));
-        $this->assertEqual($browser->getFrameFocus(), array(1));
+        $this->assertEquals(array(1), $browser->getFrameFocus());
         $this->assertTrue($browser->setFrameFocusByIndex(1));
-        $this->assertEqual($browser->getFrameFocus(), array(1, 1));
-        $this->assertEqual($browser->getContent(), 'Page one');
+        $this->assertEquals(array(1, 1), $browser->getFrameFocus());
+        $this->assertEquals('Page one', $browser->getContent());
 
         $this->assertTrue($browser->setFrameFocusByIndex(2));
-        $this->assertEqual($browser->getFrameFocus(), array(1, 2));
-        $this->assertEqual($browser->getContent(), 'Page two');
+        $this->assertEquals(array(1, 2), $browser->getFrameFocus());
+        $this->assertEquals('Page two', $browser->getContent());
 
         $browser->clearFrameFocus();
         $this->assertTrue($browser->setFrameFocusByIndex(2));
-        $this->assertEqual($browser->getFrameFocus(), array(2));
-        $this->assertEqual($browser->getContent(), 'Page three');
+        $this->assertEquals(array(2), $browser->getFrameFocus());
+        $this->assertEquals('Page three', $browser->getContent());
 
         $this->assertTrue($browser->setFrameFocusByIndex(1));
-        $this->assertEqual($browser->getContent(), 'Page onePage two');
+        $this->assertEquals('Page onePage two', $browser->getContent());
     }
 }
 ?>

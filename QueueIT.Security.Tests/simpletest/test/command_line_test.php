@@ -22,18 +22,18 @@ class TestOfCommandLineParsing extends UnitTestCase {
     
     function testCanReadAssignmentSyntax() {
         $parser = new SimpleCommandLineParser(array('--test=myTest'));
-        $this->assertEqual($parser->getTest(), 'myTest');
+        $this->assertEquals('myTest', $parser->getTest());
     }
     
     function testCanReadFollowOnSyntax() {
         $parser = new SimpleCommandLineParser(array('--test', 'myTest'));
-        $this->assertEqual($parser->getTest(), 'myTest');
+        $this->assertEquals('myTest', $parser->getTest());
     }
     
     function testCanReadShortForms() {
         $parser = new SimpleCommandLineParser(array('-t', 'myTest', '-c', 'MyClass', '-x'));
-        $this->assertEqual($parser->getTest(), 'myTest');
-        $this->assertEqual($parser->getTestCase(), 'MyClass');
+        $this->assertEquals('myTest', $parser->getTest());
+        $this->assertEquals('MyClass', $parser->getTestCase());
         $this->assertTrue($parser->isXml());
     }
 }

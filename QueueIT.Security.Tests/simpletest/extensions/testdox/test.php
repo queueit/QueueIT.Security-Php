@@ -43,7 +43,7 @@ class TestOfTestDoxReporter extends UnitTestCase
         ob_start();
         $dox->paintCaseEnd('TestOfTestDoxReporter');
         $buffer = ob_get_clean();
-        $this->assertEqual("\n", $buffer);
+        $this->assertEquals($buffer, "\n");
     }
 
     function testPaintsTestMethodInTestDoxFormat() {
@@ -51,14 +51,14 @@ class TestOfTestDoxReporter extends UnitTestCase
         ob_start();
         $dox->paintMethodStart('testSomeGreatTestCase');
         $buffer = ob_get_clean();
-        $this->assertEqual("- some great test case", $buffer);
+        $this->assertEquals($buffer, "- some great test case");
         unset($buffer);
 
         $random = rand(100, 200);
         ob_start();
         $dox->paintMethodStart("testRandomNumberIs{$random}");
         $buffer = ob_get_clean();
-        $this->assertEqual("- random number is {$random}", $buffer);
+        $this->assertEquals($buffer, "- random number is {$random}");
     }
 
     function testDoesNotOutputAnythingOnNoneTestMethods() {
@@ -66,7 +66,7 @@ class TestOfTestDoxReporter extends UnitTestCase
         ob_start();
         $dox->paintMethodStart('nonMatchingMethod');
         $buffer = ob_get_clean();
-        $this->assertEqual('', $buffer);
+        $this->assertEquals($buffer, '');
     }
 
     function testPaintMethodAddLineBreak() {
@@ -74,7 +74,7 @@ class TestOfTestDoxReporter extends UnitTestCase
         ob_start();
         $dox->paintMethodEnd('someMethod');
         $buffer = ob_get_clean();
-        $this->assertEqual("\n", $buffer);
+        $this->assertEquals($buffer, "\n");
     }
 
     function testProperlySpacesSingleLettersInMethodName() {
@@ -82,7 +82,7 @@ class TestOfTestDoxReporter extends UnitTestCase
         ob_start();
         $dox->paintMethodStart('testAVerySimpleAgainAVerySimpleMethod');
         $buffer = ob_get_clean();
-        $this->assertEqual('- a very simple again a very simple method', $buffer);
+        $this->assertEquals($buffer, '- a very simple again a very simple method');
     }
 
     function testOnFailureThisPrintsFailureNotice() {
@@ -90,7 +90,7 @@ class TestOfTestDoxReporter extends UnitTestCase
         ob_start();
         $dox->paintFail('');
         $buffer = ob_get_clean();
-        $this->assertEqual(' [FAILED]', $buffer);
+        $this->assertEquals($buffer, ' [FAILED]');
     }
 
     function testWhenMatchingMethodNamesTestPrefixIsCaseInsensitive() {

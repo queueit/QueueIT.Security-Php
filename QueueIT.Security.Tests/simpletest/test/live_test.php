@@ -27,7 +27,7 @@ class LiveHttpTestCase extends UnitTestCase {
         $this->assertTrue($socket->write("GET /test/network_confirm.php HTTP/1.0\r\n"));
         $socket->write("Host: www.lastcraft.com\r\n");
         $socket->write("Connection: close\r\n\r\n");
-        $this->assertEqual($socket->read(), "HTTP/1.1");
+        $this->assertEquals("HTTP/1.1", $socket->read());
         $socket->close();
         $this->assertIdentical($socket->read(), false);
     }

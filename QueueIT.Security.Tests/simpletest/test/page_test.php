@@ -10,7 +10,7 @@ Mock::generate('SimpleHttpResponse');
 class TestOfPageInterface extends UnitTestCase {
     function testInterfaceOnEmptyPage() {
         $page = new SimplePage();
-        $this->assertEqual($page->getTransportError(), 'No page fetched yet');
+        $this->assertEquals('No page fetched yet', $page->getTransportError());
         $this->assertIdentical($page->getRaw(), false);
         $this->assertIdentical($page->getHeaders(), false);
         $this->assertIdentical($page->getMimeType(), false);
@@ -35,9 +35,9 @@ class TestOfPageHeaders extends UnitTestCase {
         $response->setReturnValue('getRequestData', array('a' => 'A'));
 
         $page = new SimplePage($response);
-        $this->assertEqual($page->getMethod(), 'POST');
-        $this->assertEqual($page->getUrl(), new SimpleUrl('here'));
-        $this->assertEqual($page->getRequestData(), array('a' => 'A'));
+        $this->assertEquals('POST', $page->getMethod());
+        $this->assertEquals(new SimpleUrl('here'), $page->getUrl());
+        $this->assertEquals(array('a' => 'A'), $page->getRequestData());
     }
 
     function testTransportError() {
@@ -45,7 +45,7 @@ class TestOfPageHeaders extends UnitTestCase {
         $response->setReturnValue('getError', 'Ouch');
 
         $page = new SimplePage($response);
-        $this->assertEqual($page->getTransportError(), 'Ouch');
+        $this->assertEquals('Ouch', $page->getTransportError());
     }
 
     function testHeadersAccessor() {
@@ -56,7 +56,7 @@ class TestOfPageHeaders extends UnitTestCase {
         $response->setReturnValue('getHeaders', $headers);
 
         $page = new SimplePage($response);
-        $this->assertEqual($page->getHeaders(), 'My: Headers');
+        $this->assertEquals('My: Headers', $page->getHeaders());
     }
 
     function testMimeAccessor() {
@@ -67,7 +67,7 @@ class TestOfPageHeaders extends UnitTestCase {
         $response->setReturnValue('getHeaders', $headers);
 
         $page = new SimplePage($response);
-        $this->assertEqual($page->getMimeType(), 'text/html');
+        $this->assertEquals('text/html', $page->getMimeType());
     }
 
     function testResponseAccessor() {
@@ -90,8 +90,8 @@ class TestOfPageHeaders extends UnitTestCase {
         $response->setReturnValue('getHeaders', $headers);
 
         $page = new SimplePage($response);
-        $this->assertEqual($page->getAuthentication(), 'Basic');
-        $this->assertEqual($page->getRealm(), 'Secret stuff');
+        $this->assertEquals('Basic', $page->getAuthentication());
+        $this->assertEquals('Secret stuff', $page->getRealm());
     }
 }
 

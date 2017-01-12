@@ -12,7 +12,7 @@ if (! function_exists('xml_parser_create')) {
 class TestOfNestingTags extends UnitTestCase {
     function testGroupSize() {
         $nesting = new NestingGroupTag(array('SIZE' => 2));
-        $this->assertEqual($nesting->getSize(), 2);
+        $this->assertEquals(2, $nesting->getSize());
     }
 }
 

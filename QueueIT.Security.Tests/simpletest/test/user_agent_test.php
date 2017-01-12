@@ -118,7 +118,7 @@ class TestOfBrowserCookies extends UnitTestCase {
         $agent->fetchResponse(
                 new SimpleUrl('http://this.com/this/path/page.html'),
                 new SimpleGetEncoding());
-        $this->assertEqual($agent->getCookieValue("this.com", "this/path/", "a"), "AAAA");
+        $this->assertEquals("this/path/", "a"), "AAAA", $agent->getCookieValue("this.com");
     }
   
     function testIgnoringNewCookieWhenCookiesDisabled() {
@@ -138,7 +138,7 @@ class TestOfBrowserCookies extends UnitTestCase {
         $agent->fetchResponse(
                 new SimpleUrl('http://this.com/this/path/page.html'),
                 new SimpleGetEncoding());
-        $this->assertEqual($agent->getCookieValue("this.com", "this/path/", "a"), "AAAA");
+        $this->assertEquals("this/path/", "a"), "AAAA", $agent->getCookieValue("this.com");
     }
    
     function testClearCookieBySettingExpiry() {
@@ -217,7 +217,7 @@ class TestOfHttpRedirects extends UnitTestCase {
         $agent->__construct();
         $agent->setMaximumRedirects(0);
         $response = $agent->fetchResponse(new SimpleUrl('here.html'), new SimpleGetEncoding());
-        $this->assertEqual($response->getContent(), 'stuff');
+        $this->assertEquals('stuff', $response->getContent());
     }
     
     function testSingleRedirect() {
@@ -235,7 +235,7 @@ class TestOfHttpRedirects extends UnitTestCase {
         
         $agent->setMaximumRedirects(1);
         $response = $agent->fetchResponse(new SimpleUrl('one.html'), new SimpleGetEncoding());
-        $this->assertEqual($response->getContent(), 'second');
+        $this->assertEquals('second', $response->getContent());
     }
     
     function testDoubleRedirect() {
@@ -257,7 +257,7 @@ class TestOfHttpRedirects extends UnitTestCase {
         
         $agent->setMaximumRedirects(2);
         $response = $agent->fetchResponse(new SimpleUrl('one.html'), new SimpleGetEncoding());
-        $this->assertEqual($response->getContent(), 'third');
+        $this->assertEquals('third', $response->getContent());
     }
     
     function testSuccessAfterRedirect() {
@@ -279,7 +279,7 @@ class TestOfHttpRedirects extends UnitTestCase {
         
         $agent->setMaximumRedirects(2);
         $response = $agent->fetchResponse(new SimpleUrl('one.html'), new SimpleGetEncoding());
-        $this->assertEqual($response->getContent(), 'second');
+        $this->assertEquals('second', $response->getContent());
     }
     
     function testRedirectChangesPostToGet() {

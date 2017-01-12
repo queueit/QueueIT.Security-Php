@@ -26,7 +26,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 			
 		$actualUrl = $urlProvider->getUrl();
 		
-		$this->assertEqual($actualUrl, $expectedUrl);
+		$this->assertEquals($expectedUrl, $actualUrl);
 	}
 	
 	function test_getUrl_https() {
@@ -42,7 +42,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 
 		$actualUrl = $urlProvider->getUrl();
 	
-		$this->assertEqual($actualUrl, $expectedUrl);
+		$this->assertEquals($expectedUrl, $actualUrl);
 	}
 	
 	function test_getUrl_otherport() {
@@ -58,7 +58,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualUrl = $urlProvider->getUrl();
 	
-		$this->assertEqual($actualUrl, $expectedUrl);
+		$this->assertEquals($expectedUrl, $actualUrl);
 	}
 	
 	function test_getUrl_httpswithotherport() {
@@ -76,7 +76,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualUrl = $urlProvider->getUrl();
 	
-		$this->assertEqual($actualUrl, $expectedUrl);
+		$this->assertEquals($expectedUrl, $actualUrl);
 	}
 	
 	function test_getQueueId() {
@@ -89,7 +89,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualQueueId = $urlProvider->getQueueId(null);
 	
-		$this->assertEqual($actualQueueId, $expectedQueueId);
+		$this->assertEquals($expectedQueueId, $actualQueueId);
 	}
 	
 	function test_getQueueId_withprefix() {
@@ -102,7 +102,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualQueueId = $urlProvider->getQueueId('pre');
 	
-		$this->assertEqual($actualQueueId, $expectedQueueId);
+		$this->assertEquals($expectedQueueId, $actualQueueId);
 	}
 	
 	function test_getPlaceInQueue() {
@@ -115,7 +115,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualPlaceInQueue = $urlProvider->getPlaceInQueue(null);
 	
-		$this->assertEqual($actualPlaceInQueue, $expectedPlaceInQueue);
+		$this->assertEquals($expectedPlaceInQueue, $actualPlaceInQueue);
 	}
 	
 	function test_getPlaceInQueue_withprefix() {
@@ -128,7 +128,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualPlaceInQueue = $urlProvider->getPlaceInQueue('pre');
 	
-		$this->assertEqual($actualPlaceInQueue, $expectedPlaceInQueue);
+		$this->assertEquals($expectedPlaceInQueue, $actualPlaceInQueue);
 	}
 	
 	function test_getTimestamp() {
@@ -141,7 +141,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualTimestamp = $urlProvider->getTimeStamp(null);
 	
-		$this->assertEqual($actualTimestamp, $expectedTimestamp);
+		$this->assertEquals($expectedTimestamp, $actualTimestamp);
 	}
 	
 	function test_getTimestamp_withprefix() {
@@ -154,7 +154,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualTimestamp = $urlProvider->getTimeStamp('pre');
 	
-		$this->assertEqual($actualTimestamp, $expectedTimestamp);
+		$this->assertEquals($expectedTimestamp, $actualTimestamp);
 	}
 	
 	function test_getEventId() {
@@ -167,7 +167,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualEventId = $urlProvider->getEventId(null);
 	
-		$this->assertEqual($actualEventId, $expectedEventId);
+		$this->assertEquals($expectedEventId, $actualEventId);
 	}
 	
 	function test_getEventId_withprefix() {
@@ -180,7 +180,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualEventId = $urlProvider->getEventId('pre');
 	
-		$this->assertEqual($actualEventId, $expectedEventId);
+		$this->assertEquals($expectedEventId, $actualEventId);
 	}
 	
 	function test_getCustomerId() {
@@ -193,7 +193,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualCustomerId = $urlProvider->getCustomerId(null);
 	
-		$this->assertEqual($actualCustomerId, $expectedCustomerId);
+		$this->assertEquals($expectedCustomerId, $actualCustomerId);
 	}
 	
 	function test_getCustomerId_withprefix() {
@@ -206,7 +206,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 	
 		$actualCustomerId = $urlProvider->getCustomerId('pre');
 	
-		$this->assertEqual($actualCustomerId, $expectedCustomerId);
+		$this->assertEquals($expectedCustomerId, $actualCustomerId);
 	}
 	
 	function test_getOriginalUrl() {
@@ -222,7 +222,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 			
 		$actualUrl = $urlProvider->getOriginalUrl(null);
 	
-		$this->assertEqual($actualUrl, $expectedUrl);
+		$this->assertEquals($expectedUrl, $actualUrl);
 	}
 	
 	function test_getOriginalUrl_withprefix() {
@@ -238,7 +238,7 @@ class DefaultKnownUserUrlProviderTest extends UnitTestCase {
 			
 		$actualUrl = $urlProvider->getOriginalUrl('pre');
 	
-		$this->assertEqual($actualUrl, $expectedUrl);
+		$this->assertEquals($expectedUrl, $actualUrl);
 	}
 }
 

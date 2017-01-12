@@ -11,7 +11,7 @@ class TestOfSimpleStickyError extends UnitTestCase {
         $this->assertFalse($error->isError());
         $error->setError('Ouch');
         $this->assertTrue($error->isError());
-        $this->assertEqual($error->getError(), 'Ouch');
+        $this->assertEquals('Ouch', $error->getError());
     }
     
     function testClearingError() {

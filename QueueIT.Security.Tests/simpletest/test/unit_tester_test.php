@@ -16,7 +16,7 @@ class TestOfUnitTester extends UnitTestCase {
     }
     
     function testAssertEqualReturnsAssertionAsBoolean() {
-        $this->assertTrue($this->assertEqual(5, 5));
+        $this->assertTrue($this->assertEquals(5), 5);
     }
     
     function testAssertIdenticalReturnsAssertionAsBoolean() {

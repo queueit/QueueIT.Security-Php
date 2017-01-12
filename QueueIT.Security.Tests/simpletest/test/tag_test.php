@@ -9,7 +9,7 @@ class TestOfTag extends UnitTestCase {
     
     function testStartValuesWithoutAdditionalContent() {
         $tag = new SimpleTitleTag(array('a' => '1', 'b' => ''));
-        $this->assertEqual($tag->getTagName(), 'title');
+        $this->assertEquals('title', $tag->getTagName());
         $this->assertIdentical($tag->getAttribute('a'), '1');
         $this->assertIdentical($tag->getAttribute('b'), '');
         $this->assertIdentical($tag->getAttribute('c'), false);
@@ -21,7 +21,7 @@ class TestOfTag extends UnitTestCase {
         $this->assertTrue($tag->expectEndTag());
         $tag->addContent('Hello');
         $tag->addContent('World');
-        $this->assertEqual($tag->getText(), 'HelloWorld');
+        $this->assertEquals('HelloWorld', $tag->getText());
     }
     
     function testMessyTitleContent() {
@@ -29,7 +29,7 @@ class TestOfTag extends UnitTestCase {
         $this->assertTrue($tag->expectEndTag());
         $tag->addContent('<b>Hello</b>');
         $tag->addContent('<em>World</em>');
-        $this->assertEqual($tag->getText(), 'HelloWorld');
+        $this->assertEquals('HelloWorld', $tag->getText());
     }
     
     function testTagWithNoEnd() {
@@ -39,7 +39,7 @@ class TestOfTag extends UnitTestCase {
     
     function testAnchorHref() {
         $tag = new SimpleAnchorTag(array('href' => 'http://here/'));
-        $this->assertEqual($tag->getHref(), 'http://here/');
+        $this->assertEquals('http://here/', $tag->getHref());
         
         $tag = new SimpleAnchorTag(array('href' => ''));
         $this->assertIdentical($tag->getAttribute('href'), '');
@@ -73,31 +73,31 @@ class TestOfWidget extends UnitTestCase {
     
     function testTextDefault() {
         $tag = new SimpleTextTag(array('value' => 'aaa'));
-        $this->assertEqual($tag->getDefault(), 'aaa');
-        $this->assertEqual($tag->getValue(), 'aaa');
+        $this->assertEquals('aaa', $tag->getDefault());
+        $this->assertEquals('aaa', $tag->getValue());
     }
     
     function testSettingTextValue() {
         $tag = new SimpleTextTag(array('value' => 'aaa'));
         $tag->setValue('bbb');
-        $this->assertEqual($tag->getValue(), 'bbb');
+        $this->assertEquals('bbb', $tag->getValue());
         $tag->resetValue();
-        $this->assertEqual($tag->getValue(), 'aaa');
+        $this->assertEquals('aaa', $tag->getValue());
     }
     
     function testFailToSetHiddenValue() {
         $tag = new SimpleTextTag(array('value' => 'aaa', 'type' => 'hidden'));
         $this->assertFalse($tag->setValue('bbb'));
-        $this->assertEqual($tag->getValue(), 'aaa');
+        $this->assertEquals('aaa', $tag->getValue());
     }
     
     function testSubmitDefaults() {
         $tag = new SimpleSubmitTag(array('type' => 'submit'));
         $this->assertIdentical($tag->getName(), false);
-        $this->assertEqual($tag->getValue(), 'Submit');
+        $this->assertEquals('Submit', $tag->getValue());
         $this->assertFalse($tag->setValue('Cannot set this'));
-        $this->assertEqual($tag->getValue(), 'Submit');
-        $this->assertEqual($tag->getLabel(), 'Submit');
+        $this->assertEquals('Submit', $tag->getValue());
+        $this->assertEquals('Submit', $tag->getLabel());
         
         $encoding = new MockSimpleMultipartEncoding();
         $encoding->expectNever('add');
@@ -107,9 +107,9 @@ class TestOfWidget extends UnitTestCase {
     function testPopulatedSubmit() {
         $tag = new SimpleSubmitTag(
                 array('type' => 'submit', 'name' => 's', 'value' => 'Ok!'));
-        $this->assertEqual($tag->getName(), 's');
-        $this->assertEqual($tag->getValue(), 'Ok!');
-        $this->assertEqual($tag->getLabel(), 'Ok!');
+        $this->assertEquals('s', $tag->getName());
+        $this->assertEquals('Ok!', $tag->getValue());
+        $this->assertEquals('Ok!', $tag->getLabel());
         
         $encoding = new MockSimpleMultipartEncoding();
         $encoding->expectOnce('add', array('s', 'Ok!'));
@@ -119,8 +119,8 @@ class TestOfWidget extends UnitTestCase {
     function testImageSubmit() {
         $tag = new SimpleImageSubmitTag(
                 array('type' => 'image', 'name' => 's', 'alt' => 'Label'));
-        $this->assertEqual($tag->getName(), 's');
-        $this->assertEqual($tag->getLabel(), 'Label');
+        $this->assertEquals('s', $tag->getName());
+        $this->assertEquals('Label', $tag->getLabel());
         
         $encoding = new MockSimpleMultipartEncoding();
         $encoding->expectAt(0, 'add', array('s.x', 20));
@@ -131,16 +131,16 @@ class TestOfWidget extends UnitTestCase {
     function testImageSubmitTitlePreferredOverAltForLabel() {
         $tag = new SimpleImageSubmitTag(
                 array('type' => 'image', 'name' => 's', 'alt' => 'Label', 'title' => 'Title'));
-        $this->assertEqual($tag->getLabel(), 'Title');
+        $this->assertEquals('Title', $tag->getLabel());
     }
     
     function testButton() {
         $tag = new SimpleButtonTag(
                 array('type' => 'submit', 'name' => 's', 'value' => 'do'));
         $tag->addContent('I am a button');
-        $this->assertEqual($tag->getName(), 's');
-        $this->assertEqual($tag->getValue(), 'do');
-        $this->assertEqual($tag->getLabel(), 'I am a button');
+        $this->assertEquals('s', $tag->getName());
+        $this->assertEquals('do', $tag->getValue());
+        $this->assertEquals('I am a button', $tag->getLabel());
 
         $encoding = new MockSimpleMultipartEncoding();
         $encoding->expectOnce('add', array('s', 'do'));
@@ -153,8 +153,8 @@ class TestOfTextArea extends UnitTestCase {
     function testDefault() {
         $tag = new SimpleTextAreaTag(array('name' => 'a'));
         $tag->addContent('Some text');
-        $this->assertEqual($tag->getName(), 'a');
-        $this->assertEqual($tag->getDefault(), 'Some text');
+        $this->assertEquals('a', $tag->getName());
+        $this->assertEquals('Some text', $tag->getDefault());
     }
     
     function testWrapping() {
@@ -172,15 +172,15 @@ class TestOfTextArea extends UnitTestCase {
     function testWrappingRemovesLeadingcariageReturn() {
         $tag = new SimpleTextAreaTag(array('cols' => '20', 'wrap' => 'physical'));
         $tag->addContent("\rStuff");
-        $this->assertEqual($tag->getDefault(), 'Stuff');
+        $this->assertEquals('Stuff', $tag->getDefault());
         $tag->setValue("\nNew stuff\n");
-        $this->assertEqual($tag->getValue(), "New stuff\r\n");
+        $this->assertEquals("New stuff\r\n", $tag->getValue());
     }
     
     function testBreaksAreNewlineAndCarriageReturn() {
         $tag = new SimpleTextAreaTag(array('cols' => '10'));
         $tag->addContent("Some\nText\rwith\r\nbreaks");
-        $this->assertEqual($tag->getValue(), "Some\r\nText\r\nwith\r\nbreaks");
+        $this->assertEquals("Some\r\nText\r\nwith\r\nbreaks", $tag->getValue());
     }
 }
 
@@ -188,7 +188,7 @@ class TestOfCheckbox extends UnitTestCase {
     
     function testCanSetCheckboxToNamedValueWithBooleanTrue() {
         $tag = new SimpleCheckboxTag(array('name' => 'a', 'value' => 'A'));
-        $this->assertEqual($tag->getValue(), false);
+        $this->assertFalse($tag->getValue());
         $tag->setValue(true);
         $this->assertIdentical($tag->getValue(), 'A');
     }
@@ -206,7 +206,7 @@ class TestOfSelection extends UnitTestCase {
         $option = new SimpleOptionTag(array());
         $option->addContent('AAA');
         $tag->addTag($option);
-        $this->assertEqual($tag->getValue(), 'AAA');
+        $this->assertEquals('AAA', $tag->getValue());
     }
     
     function testSingleDefault() {
@@ -214,7 +214,7 @@ class TestOfSelection extends UnitTestCase {
         $option = new SimpleOptionTag(array('selected' => ''));
         $option->addContent('AAA');
         $tag->addTag($option);
-        $this->assertEqual($tag->getValue(), 'AAA');
+        $this->assertEquals('AAA', $tag->getValue());
     }
     
     function testSingleMappedDefault() {
@@ -222,7 +222,7 @@ class TestOfSelection extends UnitTestCase {
         $option = new SimpleOptionTag(array('selected' => '', 'value' => 'aaa'));
         $option->addContent('AAA');
         $tag->addTag($option);
-        $this->assertEqual($tag->getValue(), 'aaa');
+        $this->assertEquals('aaa', $tag->getValue());
     }
     
     function testStartsWithDefault() {
@@ -236,7 +236,7 @@ class TestOfSelection extends UnitTestCase {
         $c = new SimpleOptionTag(array());
         $c->addContent('CCC');
         $tag->addTag($c);
-        $this->assertEqual($tag->getValue(), 'BBB');
+        $this->assertEquals('BBB', $tag->getValue());
     }
     
     function testSettingOption() {
@@ -250,7 +250,7 @@ class TestOfSelection extends UnitTestCase {
         $c = new SimpleOptionTag(array());
         $c->addContent('CCC');
         $tag->setValue('AAA');
-        $this->assertEqual($tag->getValue(), 'AAA');
+        $this->assertEquals('AAA', $tag->getValue());
     }
     
     function testSettingMappedOption() {
@@ -265,9 +265,9 @@ class TestOfSelection extends UnitTestCase {
         $c->addContent('CCC');
         $tag->addTag($c);
         $tag->setValue('AAA');
-        $this->assertEqual($tag->getValue(), 'aaa');
+        $this->assertEquals('aaa', $tag->getValue());
         $tag->setValue('ccc');
-        $this->assertEqual($tag->getValue(), 'ccc');
+        $this->assertEquals('ccc', $tag->getValue());
     }
     
     function testSelectionDespiteSpuriousWhitespace() {
@@ -281,9 +281,9 @@ class TestOfSelection extends UnitTestCase {
         $c = new SimpleOptionTag(array());
         $c->addContent(' CCC ');
         $tag->addTag($c);
-        $this->assertEqual($tag->getValue(), ' BBB ');
+        $this->assertEquals(' BBB ', $tag->getValue());
         $tag->setValue('AAA');
-        $this->assertEqual($tag->getValue(), ' AAA ');
+        $this->assertEquals(' AAA ', $tag->getValue());
     }
     
     function testFailToSetIllegalOption() {
@@ -298,7 +298,7 @@ class TestOfSelection extends UnitTestCase {
         $c->addContent('CCC');
         $tag->addTag($c);
         $this->assertFalse($tag->setValue('Not present'));
-        $this->assertEqual($tag->getValue(), 'BBB');
+        $this->assertEquals('BBB', $tag->getValue());
     }
     
     function testNastyOptionValuesThatLookLikeFalse() {
@@ -523,7 +523,7 @@ class TestOfUploadWidget extends UnitTestCase {
     function testValueIsFilePath() {
         $upload = new SimpleUploadTag(array('name' => 'a'));
         $upload->setValue(dirname(__FILE__) . '/support/upload_sample.txt');
-        $this->assertEqual($upload->getValue(), dirname(__FILE__) . '/support/upload_sample.txt');
+        $this->assertEquals(dirname(__FILE__) . '/support/upload_sample.txt', $upload->getValue());
     }
     
     function testSubmitsFileContents() {
@@ -548,7 +548,7 @@ class TestOfLabelTag extends UnitTestCase {
     function testContentIsTextOnly() {
         $label = new SimpleLabelTag(array());
         $label->addContent('Here <tag>are</tag> words');
-        $this->assertEqual($label->getText(), 'Here are words');
+        $this->assertEquals('Here are words', $label->getText());
     }
 }
 ?>
