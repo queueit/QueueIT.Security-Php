@@ -351,7 +351,7 @@ class TestOfHttpHeaders extends UnitTestCase {
                 "Connection: close");
 		$this->assertIdentical($headers->getHttpVersion(), "1.1");
 		$this->assertIdentical($headers->getResponseCode(), 200);
-		$this->assertEqual($headers->getMimeType(), "text/plain");
+		$this->assertEquals("text/plain", $headers->getMimeType());
 	}
 
 	function testNonStandardResponseHeader() {
@@ -384,7 +384,7 @@ class TestOfHttpHeaders extends UnitTestCase {
                 "Location: http://www.somewhere-else.com/\r\n" .
                 "Connection: close");
 		$this->assertIdentical($headers->getResponseCode(), 301);
-		$this->assertEqual($headers->getLocation(), "http://www.somewhere-else.com/");
+		$this->assertEquals("http://www.somewhere-else.com/", $headers->getLocation());
 		$this->assertTrue($headers->isRedirect());
 	}
 
@@ -393,8 +393,8 @@ class TestOfHttpHeaders extends UnitTestCase {
                 "Content-Type: text/plain\r\n" .
                 "Connection: close\r\n" .
                 "WWW-Authenticate: Basic realm=\"Somewhere\"");
-		$this->assertEqual($headers->getAuthentication(), 'Basic');
-		$this->assertEqual($headers->getRealm(), 'Somewhere');
+		$this->assertEquals('Basic', $headers->getAuthentication());
+		$this->assertEquals('Somewhere', $headers->getRealm());
 		$this->assertTrue($headers->isChallenge());
 	}
 }
@@ -421,8 +421,8 @@ class TestOfHttpResponse extends UnitTestCase {
 
 		$response = new SimpleHttpResponse($socket, new SimpleUrl('here'), new SimpleGetEncoding());
 		$this->assertTrue($response->isError());
-		$this->assertEqual($response->getContent(), '');
-		$this->assertEqual($response->getSent(), 'HTTP/1.1 ...');
+		$this->assertEquals('', $response->getContent());
+		$this->assertEquals('HTTP/1.1 ...', $response->getSent());
 	}
 
 	function testIncompleteHeader() {
@@ -434,7 +434,7 @@ class TestOfHttpResponse extends UnitTestCase {
 
 		$response = new SimpleHttpResponse($socket, new SimpleUrl('here'), new SimpleGetEncoding());
 		$this->assertTrue($response->isError());
-		$this->assertEqual($response->getContent(), "");
+		$this->assertEquals("", $response->getContent());
 	}
 
 	function testParseOfResponseHeadersWhenChunked() {
@@ -454,7 +454,7 @@ class TestOfHttpResponse extends UnitTestCase {
 		$headers = $response->getHeaders();
 		$this->assertIdentical($headers->getHttpVersion(), "1.1");
 		$this->assertIdentical($headers->getResponseCode(), 200);
-		$this->assertEqual($headers->getMimeType(), "text/plain");
+		$this->assertEquals("text/plain", $headers->getMimeType());
 		$this->assertFalse($headers->isRedirect());
 		$this->assertFalse($headers->getLocation());
 	}
@@ -471,7 +471,7 @@ class TestOfHttpResponse extends UnitTestCase {
 		$response = new SimpleHttpResponse($socket, new SimpleUrl('here'), new SimpleGetEncoding());
 		$headers = $response->getHeaders();
 		$this->assertTrue($headers->isRedirect());
-		$this->assertEqual($headers->getLocation(), "http://www.somewhere-else.com/");
+		$this->assertEquals("http://www.somewhere-else.com/", $headers->getLocation());
 	}
 
 	function testRedirectWithPort() {
@@ -486,7 +486,7 @@ class TestOfHttpResponse extends UnitTestCase {
 		$response = new SimpleHttpResponse($socket, new SimpleUrl('here'), new SimpleGetEncoding());
 		$headers = $response->getHeaders();
 		$this->assertTrue($headers->isRedirect());
-		$this->assertEqual($headers->getLocation(), "http://www.somewhere-else.com:80/");
+		$this->assertEquals("http://www.somewhere-else.com:80/", $headers->getLocation());
 	}
 }
 ?>

@@ -13,7 +13,7 @@ class TestOfFrameset extends UnitTestCase {
         $page = new MockSimplePage();
         $page->setReturnValue('getTitle', 'This page');
         $frameset = new SimpleFrameset($page);
-        $this->assertEqual($frameset->getTitle(), 'This page');
+        $this->assertEquals('This page', $frameset->getTitle());
     }
 
     function TestHeadersReadFromFramesetByDefault() {
@@ -39,7 +39,7 @@ class TestOfFrameset extends UnitTestCase {
         $page = new MockSimplePage();
         $page->setReturnValue('getRaw', 'This content');
         $frameset = new SimpleFrameset($page);
-        $this->assertEqual($frameset->getRaw(), '');
+        $this->assertEquals('', $frameset->getRaw());
     }
 
     function testRawContentIsFromOnlyFrame() {
@@ -51,7 +51,7 @@ class TestOfFrameset extends UnitTestCase {
 
         $frameset = new SimpleFrameset($page);
         $frameset->addFrame($frame);
-        $this->assertEqual($frameset->getRaw(), 'Stuff');
+        $this->assertEquals('Stuff', $frameset->getRaw());
     }
 
     function testRawContentIsFromAllFrames() {
@@ -67,7 +67,7 @@ class TestOfFrameset extends UnitTestCase {
         $frameset = new SimpleFrameset($page);
         $frameset->addFrame($frame1);
         $frameset->addFrame($frame2);
-        $this->assertEqual($frameset->getRaw(), 'Stuff1Stuff2');
+        $this->assertEquals('Stuff1Stuff2', $frameset->getRaw());
     }
 
     function testTextContentIsFromOnlyFrame() {
@@ -79,7 +79,7 @@ class TestOfFrameset extends UnitTestCase {
 
         $frameset = new SimpleFrameset($page);
         $frameset->addFrame($frame);
-        $this->assertEqual($frameset->getText(), 'Stuff');
+        $this->assertEquals('Stuff', $frameset->getText());
     }
 
     function testTextContentIsFromAllFrames() {
@@ -95,7 +95,7 @@ class TestOfFrameset extends UnitTestCase {
         $frameset = new SimpleFrameset($page);
         $frameset->addFrame($frame1);
         $frameset->addFrame($frame2);
-        $this->assertEqual($frameset->getText(), 'Stuff1 Stuff2');
+        $this->assertEquals('Stuff1 Stuff2', $frameset->getText());
     }
 
     function testFieldFoundIsFirstInFramelist() {
@@ -131,7 +131,7 @@ class TestOfFrameset extends UnitTestCase {
         $frameset = new SimpleFrameset($page);
         $frameset->addFrame($frame1);
         $frameset->setFrame(array(1), $frame2);
-        $this->assertEqual($frameset->getRaw(), 'Stuff2');
+        $this->assertEquals('Stuff2', $frameset->getRaw());
     }
 
     function testFrameReplacementByName() {
@@ -147,7 +147,7 @@ class TestOfFrameset extends UnitTestCase {
         $frameset = new SimpleFrameset($page);
         $frameset->addFrame($frame1, 'a');
         $frameset->setFrame(array('a'), $frame2);
-        $this->assertEqual($frameset->getRaw(), 'Stuff2');
+        $this->assertEquals('Stuff2', $frameset->getRaw());
     }
 }
 
@@ -173,7 +173,7 @@ class TestOfFrameNavigation extends UnitTestCase {
 
         $this->assertFalse($frameset->setFrameFocusByIndex(0));
         $this->assertTrue($frameset->setFrameFocusByIndex(1));
-        $this->assertEqual($frameset->getRaw(), 'Stuff');
+        $this->assertEquals('Stuff', $frameset->getRaw());
         $this->assertFalse($frameset->setFrameFocusByIndex(2));
         $this->assertIdentical($frameset->getFrameFocus(), array(1));
     }
@@ -194,18 +194,18 @@ class TestOfFrameNavigation extends UnitTestCase {
         $frameset->addFrame($frame2);
 
         $this->assertTrue($frameset->setFrameFocusByIndex(1));
-        $this->assertEqual($frameset->getFrameFocus(), array(1));
-        $this->assertEqual($frameset->getRaw(), 'Stuff1');
+        $this->assertEquals(array(1), $frameset->getFrameFocus());
+        $this->assertEquals('Stuff1', $frameset->getRaw());
 
         $this->assertTrue($frameset->setFrameFocusByIndex(2));
-        $this->assertEqual($frameset->getFrameFocus(), array(2));
-        $this->assertEqual($frameset->getRaw(), 'Stuff2');
+        $this->assertEquals(array(2), $frameset->getFrameFocus());
+        $this->assertEquals('Stuff2', $frameset->getRaw());
 
         $this->assertFalse($frameset->setFrameFocusByIndex(3));
-        $this->assertEqual($frameset->getFrameFocus(), array(2));
+        $this->assertEquals(array(2), $frameset->getFrameFocus());
 
         $frameset->clearFrameFocus();
-        $this->assertEqual($frameset->getRaw(), 'Stuff1Stuff2');
+        $this->assertEquals('Stuff1Stuff2', $frameset->getRaw());
     }
 
     function testCanFocusByName() {
@@ -224,17 +224,17 @@ class TestOfFrameNavigation extends UnitTestCase {
         $frameset->addFrame($frame2, 'B');
 
         $this->assertTrue($frameset->setFrameFocus('A'));
-        $this->assertEqual($frameset->getFrameFocus(), array('A'));
-        $this->assertEqual($frameset->getRaw(), 'Stuff1');
+        $this->assertEquals(array('A'), $frameset->getFrameFocus());
+        $this->assertEquals('Stuff1', $frameset->getRaw());
 
         $this->assertTrue($frameset->setFrameFocusByIndex(2));
-        $this->assertEqual($frameset->getFrameFocus(), array('B'));
-        $this->assertEqual($frameset->getRaw(), 'Stuff2');
+        $this->assertEquals(array('B'), $frameset->getFrameFocus());
+        $this->assertEquals('Stuff2', $frameset->getRaw());
 
         $this->assertFalse($frameset->setFrameFocus('z'));
 
         $frameset->clearFrameFocus();
-        $this->assertEqual($frameset->getRaw(), 'Stuff1Stuff2');
+        $this->assertEquals('Stuff1Stuff2', $frameset->getRaw());
     }
 }
 
@@ -251,7 +251,7 @@ class TestOfFramesetPageInterface extends UnitTestCase {
     function assertListInAnyOrder($list, $expected) {
         sort($list);
         sort($expected);
-        $this->assertEqual($list, $expected);
+        $this->assertEquals($expected, $list);
     }
 
     private function getPageMethods() {
@@ -398,10 +398,10 @@ class TestOfFramesetPageInterface extends UnitTestCase {
 
         $four = new SimpleUrl('four.php');
         $four->setTarget(1);
-        $this->assertEqual($frameset->getUrlById(4), $four);
+        $this->assertEquals($four, $frameset->getUrlById(4));
         $five = new SimpleUrl('five.php');
         $five->setTarget(2);
-        $this->assertEqual($frameset->getUrlById(5), $five);
+        $this->assertEquals($five, $frameset->getUrlById(5));
     }
 
     function testReadUrlsFromFrameInFocus() {

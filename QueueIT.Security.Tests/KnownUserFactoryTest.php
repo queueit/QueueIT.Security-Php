@@ -51,13 +51,13 @@ class KnownUserFactoryTest extends UnitTestCase {
 				$prefix);
 		
 		$this->assertNotNull($knownUser);
-		$this->assertEqual($expectedQueueId, $knownUser->getQueueId());
-		$this->assertEqual($expectedPlaceInqueue, $knownUser->getPlaceInQueue());
-		$this->assertEqual($expectedTimeStamp, $knownUser->getTimeStamp());
-		$this->assertEqual($expectedCustomerId, $knownUser->getCustomerId());
-		$this->assertEqual($expectedEventId, $knownUser->getEventId());
-		$this->assertEqual($expectedRedirectType, $knownUser->getRedirectType());
-		$this->assertEqual($expectedOriginalUrl, $knownUser->getOriginalUrl());
+		$this->assertEquals($knownUser->getQueueId(), $expectedQueueId);
+		$this->assertEquals($knownUser->getPlaceInQueue(), $expectedPlaceInqueue);
+		$this->assertEquals($knownUser->getTimeStamp(), $expectedTimeStamp);
+		$this->assertEquals($knownUser->getCustomerId(), $expectedCustomerId);
+		$this->assertEquals($knownUser->getEventId(), $expectedEventId);
+		$this->assertEquals($knownUser->getRedirectType(), $expectedRedirectType);
+		$this->assertEquals($knownUser->getOriginalUrl(), $expectedOriginalUrl);
 	}
 	
 	function test_verifyMd5Hash_inifile() {
@@ -95,12 +95,12 @@ class KnownUserFactoryTest extends UnitTestCase {
 		$knownUser = KnownUserFactory::verifyMd5Hash(null, $urlProvider, null);
 	
 		$this->assertNotNull($knownUser);
-		$this->assertEqual($expectedQueueId, $knownUser->getQueueId());
-		$this->assertEqual($expectedPlaceInqueue, $knownUser->getPlaceInQueue());
-		$this->assertEqual($expectedTimeStamp, $knownUser->getTimeStamp());
-		$this->assertEqual($expectedCustomerId, $knownUser->getCustomerId());
-		$this->assertEqual($expectedEventId, $knownUser->getEventId());
-		$this->assertEqual($expectedOriginalUrl, $knownUser->getOriginalUrl());
+		$this->assertEquals($knownUser->getQueueId(), $expectedQueueId);
+		$this->assertEquals($knownUser->getPlaceInQueue(), $expectedPlaceInqueue);
+		$this->assertEquals($knownUser->getTimeStamp(), $expectedTimeStamp);
+		$this->assertEquals($knownUser->getCustomerId(), $expectedCustomerId);
+		$this->assertEquals($knownUser->getEventId(), $expectedEventId);
+		$this->assertEquals($knownUser->getOriginalUrl(), $expectedOriginalUrl);
 	}
 	
 	function test_verifyMd5Hash_withprefix() {
@@ -258,8 +258,8 @@ class KnownUserFactoryTest extends UnitTestCase {
 					$urlProvider,
 					$prefix);
 		} catch (QueueIT\Security\KnownUserException $e) {
-			$this->assertEqual($url, $e->getValidationUrl());
-			$this->assertEqual($expectedOriginalUrl, $e->getOriginalUrl());
+			$this->assertEquals($e->getValidationUrl(), $url);
+			$this->assertEquals($e->getOriginalUrl(), $expectedOriginalUrl);
 		}		
 	}
 }

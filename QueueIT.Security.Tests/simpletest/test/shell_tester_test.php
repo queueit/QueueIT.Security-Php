@@ -12,7 +12,7 @@ class TestOfShellTestCase extends ShellTestCase {
     }
     
     function testGenericEquality() {
-        $this->assertEqual('a', 'a');
+        $this->assertEquals('a', 'a');
         $this->assertNotEqual('a', 'A');
     }
     

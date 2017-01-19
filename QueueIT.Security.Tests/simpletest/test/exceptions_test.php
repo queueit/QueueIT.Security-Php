@@ -135,7 +135,7 @@ class TestOfCallingTearDownAfterExceptions extends UnitTestCase {
     }
 
 	function testDebriWasRemovedOnce() {
-        $this->assertEqual($this->debri, 0);
+        $this->assertEquals(0, $this->debri);
 	}
 }
 

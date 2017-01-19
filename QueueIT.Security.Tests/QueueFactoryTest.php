@@ -28,8 +28,8 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$queue = QueueFactory::CreateQueue($expectedCustomerId, $expectedEventId);
 
-		$this->assertEqual($expectedCustomerId, $queue->getCustomerId());
-		$this->assertEqual($expectedEventId, $queue->getEventId());
+		$this->assertEquals($queue->getCustomerId(), $expectedCustomerId);
+		$this->assertEquals($queue->getEventId(), $expectedEventId);
 
 	}
 
@@ -40,8 +40,8 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$queue = QueueFactory::CreateQueueFromConfiguration();
 
-		$this->assertEqual($expectedCustomerId, $queue->getCustomerId());
-		$this->assertEqual($expectedEventId, $queue->getEventId());
+		$this->assertEquals($queue->getCustomerId(), $expectedCustomerId);
+		$this->assertEquals($queue->getEventId(), $expectedEventId);
 	}
 
 	function test_createQueueFromConfigurationNamed()
@@ -51,8 +51,8 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$queue = QueueFactory::CreateQueueFromConfiguration('queue1');
 
-		$this->assertEqual($expectedCustomerId, $queue->getCustomerId());
-		$this->assertEqual($expectedEventId, $queue->getEventId());
+		$this->assertEquals($queue->getCustomerId(), $expectedCustomerId);
+		$this->assertEquals($queue->getEventId(), $expectedEventId);
 	}
 
 	function test_getQueueUrl()
@@ -67,7 +67,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualQueueUrl = $queue->GetQueueUrl();
 
-		$this->assertEqual($expectedQueueUrl, $actualQueueUrl);
+		$this->assertEquals($actualQueueUrl, $expectedQueueUrl);
 	}
 
 	function test_getQueueUrlLanguage()
@@ -83,7 +83,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualQueueUrl = $queue->GetQueueUrl(null, null, null, $expectedLanguage);
 
-		$this->assertEqual($expectedQueueUrl, $actualQueueUrl);
+		$this->assertEquals($actualQueueUrl, $expectedQueueUrl);
 	}
 
 	function test_getQueueUrlLayoutName()
@@ -99,7 +99,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualQueueUrl = $queue->GetQueueUrl(null, null, null, null, $expectedLayoutName);
 
-		$this->assertEqual($expectedQueueUrl, $actualQueueUrl);
+		$this->assertEquals($actualQueueUrl, $expectedQueueUrl);
 	}
 
 	function test_getQueueUrlDomainAlias()
@@ -115,7 +115,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualQueueUrl = $queue->GetQueueUrl(null, null, $expectedDomainAlias);
 
-		$this->assertEqual($expectedQueueUrl, $actualQueueUrl);
+		$this->assertEquals($actualQueueUrl, $expectedQueueUrl);
 	}
 
 	function test_getQueueUrlSsl()
@@ -130,7 +130,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualQueueUrl = $queue->GetQueueUrl(null, true, null);
 
-		$this->assertEqual($expectedQueueUrl, $actualQueueUrl);
+		$this->assertEquals($actualQueueUrl, $expectedQueueUrl);
 	}
 
 	function test_getQueueUrlIncludeTarget()
@@ -150,7 +150,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualQueueUrl = $queue->GetQueueUrl(true, null, null);
 
-		$this->assertEqual($expectedQueueUrl, $actualQueueUrl);
+		$this->assertEquals($actualQueueUrl, $expectedQueueUrl);
 	}
 
 	function test_getQueueUrlTargetUrl()
@@ -166,7 +166,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualQueueUrl = $queue->GetQueueUrl($expectedTarget, null, null);
 
-		$this->assertEqual($expectedQueueUrl, $actualQueueUrl);
+		$this->assertEquals($actualQueueUrl, $expectedQueueUrl);
 	}
 
 	function test_getCancelUrl()
@@ -181,7 +181,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualCancelUrl = $queue->GetCancelUrl();
 
-		$this->assertEqual($expectedCancelUrl, $actualCancelUrl);
+		$this->assertEquals($actualCancelUrl, $expectedCancelUrl);
 	}
 
 	function test_getCancelUrlSsl()
@@ -196,7 +196,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualCancelUrl = $queue->GetCancelUrl(null, null, true);
 
-		$this->assertEqual($expectedCancelUrl, $actualCancelUrl);
+		$this->assertEquals($actualCancelUrl, $expectedCancelUrl);
 	}
 
 	function test_getCancelUrlDomainAlias()
@@ -212,7 +212,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualCancelUrl = $queue->GetCancelUrl(null, null, null, $expectedDomainAlias);
 
-		$this->assertEqual($expectedCancelUrl, $actualCancelUrl);
+		$this->assertEquals($actualCancelUrl, $expectedCancelUrl);
 	}
 
 	function test_getCancelUrlLandingPage()
@@ -228,7 +228,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualCancelUrl = $queue->GetCancelUrl($expectedTarget);
 
-		$this->assertEqual($expectedCancelUrl, $actualCancelUrl);
+		$this->assertEquals($actualCancelUrl, $expectedCancelUrl);
 	}
 
 	function test_getCancelUrlLandingPageFromConfiguration()
@@ -243,7 +243,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualCancelUrl = $queue->GetCancelUrl();
 
-		$this->assertEqual($expectedCancelUrl, $actualCancelUrl);
+		$this->assertEquals($actualCancelUrl, $expectedCancelUrl);
 	}
 
 	function test_getLandingPageUrl()
@@ -267,7 +267,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualLandingPageUrl = $queue->getLandingPageUrl();
 
-		$this->assertEqual($expectedLandingPageUrl, $actualLandingPageUrl);
+		$this->assertEquals($actualLandingPageUrl, $expectedLandingPageUrl);
 	}
 
 	function test_getLandingPageUrlIncludeTarget()
@@ -282,7 +282,7 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualLandingPageUrl = $queue->getLandingPageUrl(true);
 
-		$this->assertEqual($expectedLandingPageUrl, $actualLandingPageUrl);
+		$this->assertEquals($actualLandingPageUrl, $expectedLandingPageUrl);
 	}
 
 	function test_getLandingPageUrlTargetUrl()
@@ -294,6 +294,6 @@ class QueueFactoryTest extends UnitTestCase {
 
 		$actualLandingPageUrl = $queue->getLandingPageUrl($expectedTarget);
 
-		$this->assertEqual($expectedLandingPageUrl, $actualLandingPageUrl);
+		$this->assertEquals($actualLandingPageUrl, $expectedLandingPageUrl);
 	}
 }

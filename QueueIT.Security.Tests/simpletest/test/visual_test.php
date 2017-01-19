@@ -56,7 +56,7 @@ class PassingUnitTestCaseOutput extends UnitTestCase {
     }
 
     function testTypeEquality() {
-        $this->assertEqual("0", 0, "%s -> Pass");
+        $this->assertEquals(0, "%s -> Pass", "0");
     }
 
     function testNullEquality() {
@@ -69,12 +69,12 @@ class PassingUnitTestCaseOutput extends UnitTestCase {
     }
 
     function testStringEquality() {
-        $this->assertEqual("a", "a", "%s -> Pass");
+        $this->assertEquals("a", "%s -> Pass", "a");
         $this->assertNotEqual("aa", "ab", "%s -> Pass");
     }
 
     function testHashEquality() {
-        $this->assertEqual(array("a" => "A", "b" => "B"), array("b" => "B", "a" => "A"), "%s -> Pass");
+        $this->assertEquals("b" => "B"), array("b" => "B", "a" => "A"), "%s -> Pass", array("a" => "A");
     }
 
     function testWithin() {
@@ -106,7 +106,7 @@ class PassingUnitTestCaseOutput extends UnitTestCase {
     }
 
     function testObjectEquality() {
-        $this->assertEqual(new TestDisplayClass(4), new TestDisplayClass(4), "%s -> Pass");
+        $this->assertEquals(new TestDisplayClass(4), "%s -> Pass", new TestDisplayClass(4));
         $this->assertNotEqual(new TestDisplayClass(4), new TestDisplayClass(5), "%s -> Pass");
     }
 
@@ -138,7 +138,7 @@ class PassingUnitTestCaseOutput extends UnitTestCase {
         for ($i = 0; $i < 10; $i++) {
             $text .= "0123456789";
         }
-        $this->assertEqual($text, $text);
+        $this->assertEquals($text, $text);
     }
 }
 
@@ -177,21 +177,21 @@ class FailingUnitTestCaseOutput extends UnitTestCase {
     }
 
     function testNullEquality() {
-        $this->assertEqual(null, 1, "%s -> Fail");        // Fail.
-        $this->assertEqual(1, null, "%s -> Fail");        // Fail.
+        $this->assertEquals(1, "%s -> Fail", null);        // Fail.
+        $this->assertEquals(null, "%s -> Fail", 1);        // Fail.
     }
 
     function testIntegerEquality() {
-        $this->assertEqual(1, 2, "%s -> Fail");        // Fail.
+        $this->assertEquals(2, "%s -> Fail", 1);        // Fail.
     }
 
     function testStringEquality() {
         $this->assertNotEqual("a", "a", "%s -> Fail");    // Fail.
-        $this->assertEqual("aa", "ab", "%s -> Fail");        // Fail.
+        $this->assertEquals("ab", "%s -> Fail", "aa");        // Fail.
     }
 
     function testHashEquality() {
-        $this->assertEqual(array("a" => "A", "b" => "B"), array("b" => "B", "a" => "Z"), "%s -> Fail");
+        $this->assertEquals("b" => "B"), array("b" => "B", "a" => "Z"), "%s -> Fail", array("a" => "A");
     }
 
     function testWithin() {
@@ -225,7 +225,7 @@ class FailingUnitTestCaseOutput extends UnitTestCase {
 
     function testObjectEquality() {
         $this->assertNotEqual(new TestDisplayClass(4), new TestDisplayClass(4), "%s -> Fail");    // Fail.
-        $this->assertEqual(new TestDisplayClass(4), new TestDisplayClass(5), "%s -> Fail");        // Fail.
+        $this->assertEquals(new TestDisplayClass(5), "%s -> Fail", new TestDisplayClass(4));        // Fail.
     }
 
     function testObjectIndentity() {
@@ -256,7 +256,7 @@ class FailingUnitTestCaseOutput extends UnitTestCase {
         for ($i = 0; $i < 10; $i++) {
             $text .= "0123456789";
         }
-        $this->assertEqual($text . $text, $text . "a" . $text);        // Fail.
+        $this->assertEquals($text . "a" . $text, $text . $text);        // Fail.
     }
 }
 
@@ -373,7 +373,7 @@ class TestOfMockObjectsOutput extends UnitTestCase {
 class TestOfPastBugs extends UnitTestCase {
 
     function testMixedTypes() {
-        $this->assertEqual(array(), null, "%s -> Pass");
+        $this->assertEquals(null, "%s -> Pass", array());
         $this->assertIdentical(array(), null, "%s -> Fail");    // Fail.
     }
 

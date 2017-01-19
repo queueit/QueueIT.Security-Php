@@ -10,12 +10,12 @@ abstract class TestOfParsing extends UnitTestCase {
 
     function testRawAccessor() {
         $page = $this->whenVisiting('http://host/', 'Raw HTML');
-        $this->assertEqual($page->getRaw(), 'Raw HTML');
+        $this->assertEquals('Raw HTML', $page->getRaw());
     }
 
     function testTextAccessor() {
         $page = $this->whenVisiting('http://host/', '<b>Some</b> &quot;messy&quot; HTML');
-        $this->assertEqual($page->getText(), 'Some "messy" HTML');
+        $this->assertEquals('Some "messy" HTML', $page->getText());
     }
 
     function testFramesetAbsence() {
@@ -120,13 +120,13 @@ abstract class TestOfParsing extends UnitTestCase {
     function testTitle() {
         $page = $this->whenVisiting('http://host',
                                     '<html><head><title>Me</title></head></html>');
-        $this->assertEqual($page->getTitle(), 'Me');
+        $this->assertEquals('Me', $page->getTitle());
     }
 
     function testTitleWithEntityReference() {
         $page = $this->whenVisiting('http://host',
                                     '<html><head><Title>Me&amp;Me</TITLE></head></html>');
-        $this->assertEqual($page->getTitle(), "Me&Me");
+        $this->assertEquals("Me&Me", $page->getTitle());
     }
 
     function testOnlyFramesInFramesetAreRecognised() {
@@ -214,7 +214,7 @@ abstract class TestOfParsing extends UnitTestCase {
                 '<input type="text" name="here" value="Hello">' .
                 '</form></head></html>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('here')), "Hello");
+        $this->assertEquals("Hello", $page->getField(new SimpleByName('here')));
     }
 
     function testCanReadElementOfUnclosedForm() {
@@ -222,7 +222,7 @@ abstract class TestOfParsing extends UnitTestCase {
                 '<input type="text" name="here" value="Hello">' .
                 '</head></html>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('here')), "Hello");
+        $this->assertEquals("Hello", $page->getField(new SimpleByName('here')));
     }
 
     function testCanReadElementByLabel() {
@@ -230,7 +230,7 @@ abstract class TestOfParsing extends UnitTestCase {
                 '<label>Where<input type="text" name="here" value="Hello"></label>' .
                 '</head></html>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByLabel('Where')), "Hello");
+        $this->assertEquals("Hello", $page->getField(new SimpleByLabel('Where')));
     }
 
     function testCanFindFormByLabel() {
@@ -322,7 +322,7 @@ abstract class TestOfParsing extends UnitTestCase {
     function testEntitiesAreDecodedInDefaultTextFieldValue() {
         $raw = '<form><input type="text" name="a" value="&amp;\'&quot;&lt;&gt;"></form>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('a')), '&\'"<>');
+        $this->assertEquals('&\'"<>', $page->getField(new SimpleByName('a')));
     }
 
     function testReadingTextFieldIsCaseInsensitive() {
@@ -344,9 +344,9 @@ abstract class TestOfParsing extends UnitTestCase {
                 '</form></head></html>';
         $page = $this->whenVisiting('http://host', $raw);
         $this->assertTrue($page->setField(new SimpleByName('a'), 'aaa'));
-        $this->assertEqual($page->getField(new SimpleByName('a')), 'aaa');
+        $this->assertEquals('aaa', $page->getField(new SimpleByName('a')));
         $this->assertTrue($page->setField(new SimpleById(3), 'bbb'));
-        $this->assertEqual($page->getField(new SimpleBYId(3)), 'bbb');
+        $this->assertEquals('bbb', $page->getField(new SimpleBYId(3)));
         $this->assertFalse($page->setField(new SimpleByName('z'), 'zzz'));
         $this->assertNull($page->getField(new SimpleByName('z')));
     }
@@ -358,10 +358,10 @@ abstract class TestOfParsing extends UnitTestCase {
                 '</label>' .
                 '</form></head></html>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('a')), 'A');
-        $this->assertEqual($page->getField(new SimpleByLabel('Stuff')), 'A');
+        $this->assertEquals('A', $page->getField(new SimpleByName('a')));
+        $this->assertEquals('A', $page->getField(new SimpleByLabel('Stuff')));
         $this->assertTrue($page->setField(new SimpleByLabel('Stuff'), 'aaa'));
-        $this->assertEqual($page->getField(new SimpleByLabel('Stuff')), 'aaa');
+        $this->assertEquals('aaa', $page->getField(new SimpleByLabel('Stuff')));
     }
 
     function testLabelsWithoutForDoNotAttachToInputsWithNoId() {
@@ -370,12 +370,12 @@ abstract class TestOfParsing extends UnitTestCase {
             <label>Text B <input type="text" name="b" value="two"></label>
         </form>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByLabelOrName('Text A')), 'one');
-        $this->assertEqual($page->getField(new SimpleByLabelOrName('Text B')), 'two');
+        $this->assertEquals('one', $page->getField(new SimpleByLabelOrName('Text A')));
+        $this->assertEquals('two', $page->getField(new SimpleByLabelOrName('Text B')));
         $this->assertTrue($page->setField(new SimpleByLabelOrName('Text A'), '1'));
         $this->assertTrue($page->setField(new SimpleByLabelOrName('Text B'), '2'));
-        $this->assertEqual($page->getField(new SimpleByLabelOrName('Text A')), '1');
-        $this->assertEqual($page->getField(new SimpleByLabelOrName('Text B')), '2');
+        $this->assertEquals('1', $page->getField(new SimpleByLabelOrName('Text A')));
+        $this->assertEquals('2', $page->getField(new SimpleByLabelOrName('Text B')));
     }
 
     function testGettingTextFieldByEnclosingLabelWithConflictingOtherFields() {
@@ -386,9 +386,9 @@ abstract class TestOfParsing extends UnitTestCase {
                 '<input type="text" name="b" value="B">' .
                 '</form></head></html>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('a')), 'A');
-        $this->assertEqual($page->getField(new SimpleByName('b')), 'B');
-        $this->assertEqual($page->getField(new SimpleByLabel('Stuff')), 'A');
+        $this->assertEquals('A', $page->getField(new SimpleByName('a')));
+        $this->assertEquals('B', $page->getField(new SimpleByName('b')));
+        $this->assertEquals('A', $page->getField(new SimpleByLabel('Stuff')));
     }
 
     function testSettingTextFieldByExternalLabel() {
@@ -397,9 +397,9 @@ abstract class TestOfParsing extends UnitTestCase {
                 '<input id="aaa" type="text" name="a" value="A">' .
                 '</form></head></html>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByLabel('Stuff')), 'A');
+        $this->assertEquals('A', $page->getField(new SimpleByLabel('Stuff')));
         $this->assertTrue($page->setField(new SimpleByLabel('Stuff'), 'aaa'));
-        $this->assertEqual($page->getField(new SimpleByLabel('Stuff')), 'aaa');
+        $this->assertEquals('aaa', $page->getField(new SimpleByLabel('Stuff')));
     }
 
     function testReadingTextArea() {
@@ -408,25 +408,25 @@ abstract class TestOfParsing extends UnitTestCase {
                 '<input type="submit">' .
                 '</form></head></html>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('a')), 'aaa');
+        $this->assertEquals('aaa', $page->getField(new SimpleByName('a')));
     }
 
     function testEntitiesAreDecodedInTextareaValue() {
         $raw = '<form><textarea name="a">&amp;\'&quot;&lt;&gt;</textarea></form>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('a')), '&\'"<>');
+        $this->assertEquals('&\'"<>', $page->getField(new SimpleByName('a')));
     }
 
     function testNewlinesPreservedInTextArea() {
         $raw = "<form><textarea name=\"a\">hello\r\nworld</textarea></form>";
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('a')), "hello\r\nworld");
+        $this->assertEquals("hello\r\nworld", $page->getField(new SimpleByName('a')));
     }
 
     function testWhitespacePreservedInTextArea() {
         $raw = '<form><textarea name="a">     </textarea></form>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('a')), '     ');
+        $this->assertEquals('     ', $page->getField(new SimpleByName('a')));
     }
 
     function testComplexWhitespaceInTextArea() {
@@ -442,7 +442,7 @@ abstract class TestOfParsing extends UnitTestCase {
                 "    </body>\n" .
                 "</html>";
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('c')), "                ");
+        $this->assertEquals("                ", $page->getField(new SimpleByName('c')));
     }
 
     function testSettingTextArea() {
@@ -452,13 +452,13 @@ abstract class TestOfParsing extends UnitTestCase {
                 '</form>';
         $page = $this->whenVisiting('http://host', $raw);
         $this->assertTrue($page->setField(new SimpleByName('a'), 'AAA'));
-        $this->assertEqual($page->getField(new SimpleByName('a')), 'AAA');
+        $this->assertEquals('AAA', $page->getField(new SimpleByName('a')));
     }
 
     function testDontIncludeTextAreaContentInLabel() {
         $raw = '<form><label>Text area C<textarea id=3 name="c">mouse</textarea></label></form>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByLabel('Text area C')), 'mouse');
+        $this->assertEquals('mouse', $page->getField(new SimpleByLabel('Text area C')));
     }
 
     function testSettingSelectionField() {
@@ -470,10 +470,10 @@ abstract class TestOfParsing extends UnitTestCase {
                 '<input type="submit">' .
                 '</form>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('a')), 'bbb');
+        $this->assertEquals('bbb', $page->getField(new SimpleByName('a')));
         $this->assertFalse($page->setField(new SimpleByName('a'), 'ccc'));
         $this->assertTrue($page->setField(new SimpleByName('a'), 'aaa'));
-        $this->assertEqual($page->getField(new SimpleByName('a')), 'aaa');
+        $this->assertEquals('aaa', $page->getField(new SimpleByName('a')));
     }
 
     function testSelectionOptionsAreNormalised() {
@@ -484,9 +484,9 @@ abstract class TestOfParsing extends UnitTestCase {
                 '</select>' .
                 '</form>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('a')), 'Big bold');
+        $this->assertEquals('Big bold', $page->getField(new SimpleByName('a')));
         $this->assertTrue($page->setField(new SimpleByName('a'), 'small italic'));
-        $this->assertEqual($page->getField(new SimpleByName('a')), 'small italic');
+        $this->assertEquals('small italic', $page->getField(new SimpleByName('a')));
     }
 
     function testCanParseBlankOptions() {
@@ -515,7 +515,7 @@ abstract class TestOfParsing extends UnitTestCase {
         $page = $this->whenVisiting('http://host', $raw);
         $this->assertTrue($page->setField(new SimpleByName('d'), 'd2'));
         $this->assertTrue($page->setField(new SimpleByName('h'), 'h1'));
-        $this->assertEqual($page->getField(new SimpleByName('d')), 'd2');
+        $this->assertEquals('d2', $page->getField(new SimpleByName('d')));
     }
 
     function testEmptyOptionDoesNotScrewUpTwoSelectionFields() {
@@ -533,7 +533,7 @@ abstract class TestOfParsing extends UnitTestCase {
         $page = $this->whenVisiting('http://host', $raw);
         $this->assertTrue($page->setField(new SimpleByName('d'), 'd2'));
         $this->assertTrue($page->setField(new SimpleByName('h'), 'h1'));
-        $this->assertEqual($page->getField(new SimpleByName('d')), 'd2');
+        $this->assertEquals('d2', $page->getField(new SimpleByName('d')));
     }
 
     function testSettingSelectionFieldByEnclosingLabel() {
@@ -543,9 +543,9 @@ abstract class TestOfParsing extends UnitTestCase {
                 '</label>' .
                 '</form>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByLabel('Stuff')), 'A');
+        $this->assertEquals('A', $page->getField(new SimpleByLabel('Stuff')));
         $this->assertTrue($page->setField(new SimpleByLabel('Stuff'), 'B'));
-        $this->assertEqual($page->getField(new SimpleByLabel('Stuff')), 'B');
+        $this->assertEquals('B', $page->getField(new SimpleByLabel('Stuff')));
     }
 
     function testTwoSelectionFieldsWithLabelsAreIndependent() {
@@ -566,7 +566,7 @@ abstract class TestOfParsing extends UnitTestCase {
         $page = $this->whenVisiting('http://host', $raw);
         $this->assertTrue($page->setField(new SimpleByLabel('Labelled D'), 'd2'));
         $this->assertTrue($page->setField(new SimpleByLabel('Labelled H'), 'h1'));
-        $this->assertEqual($page->getField(new SimpleByLabel('Labelled D')), 'd2');
+        $this->assertEquals('d2', $page->getField(new SimpleByLabel('Labelled D')));
     }
 
     function testSettingRadioButtonByEnclosingLabel() {
@@ -575,9 +575,9 @@ abstract class TestOfParsing extends UnitTestCase {
                 '<label>B<input type="radio" name="r" value="b"></label>' .
                 '</form>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByLabel('A')), 'a');
+        $this->assertEquals('a', $page->getField(new SimpleByLabel('A')));
         $this->assertTrue($page->setField(new SimpleBylabel('B'), 'b'));
-        $this->assertEqual($page->getField(new SimpleByLabel('B')), 'b');
+        $this->assertEquals('b', $page->getField(new SimpleByLabel('B')));
     }
 
     function testCanParseInputsWithAllKindsOfAttributeQuoting() {
@@ -587,9 +587,9 @@ abstract class TestOfParsing extends UnitTestCase {
                 '<input type=checkbox name="third" value=\'three\' checked="checked" />' .
                 '</form>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByName('first')), 'one');
-        $this->assertEqual($page->getField(new SimpleByName('second')), false);
-        $this->assertEqual($page->getField(new SimpleByName('third')), 'three');
+        $this->assertEquals('one', $page->getField(new SimpleByName('first')));
+        $this->assertFalse($page->getField(new SimpleByName('second')));
+        $this->assertEquals('three', $page->getField(new SimpleByName('third')));
     }
 
     function urlToString($url) {
@@ -615,13 +615,13 @@ class TestOfParsingUsingPhpParser extends TestOfParsing {
     function testNastyTitle() {
         $page = $this->whenVisiting('http://host',
                                     '<html><head><Title> <b>Me&amp;Me </TITLE></b></head></html>');
-        $this->assertEqual($page->getTitle(), "Me&Me");
+        $this->assertEquals("Me&Me", $page->getTitle());
     }
 
     function testLabelShouldStopAtClosingLabelTag() {
         $raw = '<form><label>start<textarea id=3 name="c" wrap="hard">stuff</textarea>end</label>stuff</form>';
         $page = $this->whenVisiting('http://host', $raw);
-        $this->assertEqual($page->getField(new SimpleByLabel('startend')), 'stuff');
+        $this->assertEquals('stuff', $page->getField(new SimpleByLabel('startend')));
     }
 }
 

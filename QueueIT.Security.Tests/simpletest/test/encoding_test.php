@@ -10,7 +10,7 @@ class TestOfEncodedParts extends UnitTestCase {
     
     function testFormEncodedAsKeyEqualsValue() {
         $pair = new SimpleEncodedPair('a', 'A');
-        $this->assertEqual($pair->asRequest(), 'a=A');
+        $this->assertEquals('a=A', $pair->asRequest());
     }
     
     function testMimeEncodedAsHeadersAndContent() {
@@ -68,7 +68,7 @@ class TestOfEncoding extends UnitTestCase {
         $query = array('a' => array('aa' => 'aaa'));
         $encoding = new SimplePostEncoding($query);
         $this->assertTrue($encoding->hasMoreThanOneLevel($query));
-        $this->assertEqual($encoding->rewriteArrayWithMultipleLevels($query), array('a[aa]' => 'aaa'));
+        $this->assertEquals(array('a[aa]' => 'aaa'), $encoding->rewriteArrayWithMultipleLevels($query));
         $this->assertIdentical($encoding->getValue('a[aa]'), 'aaa');
         $this->assertWritten($encoding, 'a%5Baa%5D=aaa');
     }
@@ -77,7 +77,7 @@ class TestOfEncoding extends UnitTestCase {
         $query = array('a' => array('aa' => array('aaa' => 'aaaa')));
         $encoding = new SimplePostEncoding($query);
         $this->assertTrue($encoding->hasMoreThanOneLevel($query));
-        $this->assertEqual($encoding->rewriteArrayWithMultipleLevels($query), array('a[aa][aaa]' => 'aaaa'));
+        $this->assertEquals(array('a[aa][aaa]' => 'aaaa'), $encoding->rewriteArrayWithMultipleLevels($query));
         $this->assertIdentical($encoding->getValue('a[aa][aaa]'), 'aaaa');
         $this->assertWritten($encoding, 'a%5Baa%5D%5Baaa%5D=aaaa');
     }
@@ -92,7 +92,7 @@ class TestOfEncoding extends UnitTestCase {
         $query = array('a' => array('a1', 'a2'));
         $encoding = new SimplePostEncoding($query);
         $this->assertTrue($encoding->hasMoreThanOneLevel($query));
-        $this->assertEqual($encoding->rewriteArrayWithMultipleLevels($query), array('a[0]' => 'a1', 'a[1]' => 'a2'));
+        $this->assertEquals(array('a[0]' => 'a1', 'a[1]' => 'a2'), $encoding->rewriteArrayWithMultipleLevels($query));
         $this->assertIdentical($encoding->getValue('a[0]'), 'a1');
         $this->assertIdentical($encoding->getValue('a[1]'), 'a2');
         $this->assertWritten($encoding, 'a%5B0%5D=a1&a%5B1%5D=a2');
@@ -101,14 +101,14 @@ class TestOfEncoding extends UnitTestCase {
     function testSingleParameter() {
         $encoding = new SimplePostEncoding();
         $encoding->add('a', 'Hello');
-        $this->assertEqual($encoding->getValue('a'), 'Hello');
+        $this->assertEquals('Hello', $encoding->getValue('a'));
         $this->assertWritten($encoding, 'a=Hello');
     }
     
     function testFalseParameter() {
         $encoding = new SimplePostEncoding();
         $encoding->add('a', false);
-        $this->assertEqual($encoding->getValue('a'), false);
+        $this->assertFalse($encoding->getValue('a'));
         $this->assertWritten($encoding, '');
     }
     

@@ -18,39 +18,39 @@ class TestOfParallelRegex extends UnitTestCase {
     function testNoPatterns() {
         $regex = new ParallelRegex(false);
         $this->assertFalse($regex->match("Hello", $match));
-        $this->assertEqual($match, "");
+        $this->assertEquals("", $match);
     }
 
     function testNoSubject() {
         $regex = new ParallelRegex(false);
         $regex->addPattern(".*");
         $this->assertTrue($regex->match("", $match));
-        $this->assertEqual($match, "");
+        $this->assertEquals("", $match);
     }
 
     function testMatchAll() {
         $regex = new ParallelRegex(false);
         $regex->addPattern(".*");
         $this->assertTrue($regex->match("Hello", $match));
-        $this->assertEqual($match, "Hello");
+        $this->assertEquals("Hello", $match);
     }
 
     function testCaseSensitive() {
         $regex = new ParallelRegex(true);
         $regex->addPattern("abc");
         $this->assertTrue($regex->match("abcdef", $match));
-        $this->assertEqual($match, "abc");
+        $this->assertEquals("abc", $match);
         $this->assertTrue($regex->match("AAABCabcdef", $match));
-        $this->assertEqual($match, "abc");
+        $this->assertEquals("abc", $match);
     }
 
     function testCaseInsensitive() {
         $regex = new ParallelRegex(false);
         $regex->addPattern("abc");
         $this->assertTrue($regex->match("abcdef", $match));
-        $this->assertEqual($match, "abc");
+        $this->assertEquals("abc", $match);
         $this->assertTrue($regex->match("AAABCabcdef", $match));
-        $this->assertEqual($match, "ABC");
+        $this->assertEquals("ABC", $match);
     }
 
     function testMatchMultiple() {
@@ -58,9 +58,9 @@ class TestOfParallelRegex extends UnitTestCase {
         $regex->addPattern("abc");
         $regex->addPattern("ABC");
         $this->assertTrue($regex->match("abcdef", $match));
-        $this->assertEqual($match, "abc");
+        $this->assertEquals("abc", $match);
         $this->assertTrue($regex->match("AAABCabcdef", $match));
-        $this->assertEqual($match, "ABC");
+        $this->assertEquals("ABC", $match);
         $this->assertFalse($regex->match("Hello", $match));
     }
 
@@ -69,9 +69,9 @@ class TestOfParallelRegex extends UnitTestCase {
         $regex->addPattern("abc", "letter");
         $regex->addPattern("123", "number");
         $this->assertIdentical($regex->match("abcdef", $match), "letter");
-        $this->assertEqual($match, "abc");
+        $this->assertEquals("abc", $match);
         $this->assertIdentical($regex->match("0123456789", $match), "number");
-        $this->assertEqual($match, "123");
+        $this->assertEquals("123", $match);
     }
 }
 
@@ -79,7 +79,7 @@ class TestOfStateStack extends UnitTestCase {
 
     function testStartState() {
         $stack = new SimpleStateStack("one");
-        $this->assertEqual($stack->getCurrent(), "one");
+        $this->assertEquals("one", $stack->getCurrent());
     }
 
     function testExhaustion() {
@@ -90,16 +90,16 @@ class TestOfStateStack extends UnitTestCase {
     function testStateMoves() {
         $stack = new SimpleStateStack("one");
         $stack->enter("two");
-        $this->assertEqual($stack->getCurrent(), "two");
+        $this->assertEquals("two", $stack->getCurrent());
         $stack->enter("three");
-        $this->assertEqual($stack->getCurrent(), "three");
+        $this->assertEquals("three", $stack->getCurrent());
         $this->assertTrue($stack->leave());
-        $this->assertEqual($stack->getCurrent(), "two");
+        $this->assertEquals("two", $stack->getCurrent());
         $stack->enter("third");
-        $this->assertEqual($stack->getCurrent(), "third");
+        $this->assertEquals("third", $stack->getCurrent());
         $this->assertTrue($stack->leave());
         $this->assertTrue($stack->leave());
-        $this->assertEqual($stack->getCurrent(), "one");
+        $this->assertEquals("one", $stack->getCurrent());
     }
 }
 
