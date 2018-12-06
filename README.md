@@ -1,3 +1,10 @@
+### This repository is obsolete - please use new version 3 found here: https://github.com/queueit/KnownUser.V3.PHP
+
+---
+---
+---
+
+
 QueueIT.Security-Php
 ====================
 
